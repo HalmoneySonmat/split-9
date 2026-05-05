@@ -47,6 +47,13 @@ TinyLlama-1.1B-Chat-v1.0 for Phase 1–3. Re-evaluation point at Phase 2.1.
 - All synthetic explanations in Phase 3 are in English (see ADR-003).
 - If TinyLlama proves too weak in Phase 2.4 forward-pass tests, we fall back to Pythia-1B or step up to Llama-3-3B with LoRA.
 
+**Addendum (2026-05-06)**.
+Actual hardware identified: RTX 3070 Ti, 8 GB VRAM (lower bound of the 8–24 GB range we initially scoped). Implications for Phase 2–3 training:
+- TinyLlama in bf16 occupies ~2.2 GB. Adapter + Go-Net + activations + optimizer state → realistic budget ~6–7 GB for joint training.
+- Training-time mitigations to apply by default: `gradient_checkpointing=True`, batch size ≤ 4 with gradient accumulation, 8-bit Adam (`bitsandbytes`).
+- If still OOM after those, drop to Pythia-410M or load TinyLlama in 4-bit (QLoRA) with adapter on top.
+- Inference (Phase 4 evaluation) is comfortable at 8 GB — only training is tight.
+
 ---
 
 ## ADR-003 — Output language = English

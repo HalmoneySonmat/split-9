@@ -24,6 +24,23 @@ def section(name: str) -> None:
     print(f"\n=== {name} ===")
 
 
+def _version(mod, name: str) -> str:
+    """Return a module's version, falling back to importlib.metadata or 'n/a'.
+
+    Some libraries (notably transformer_lens) don't expose __version__ as an
+    attribute, so a naive `mod.__version__` access can raise AttributeError.
+    """
+    v = getattr(mod, "__version__", None)
+    if v:
+        return str(v)
+    try:
+        from importlib.metadata import version as _md_version
+
+        return _md_version(name)
+    except Exception:
+        return "n/a"
+
+
 def check_imports() -> bool:
     section("imports")
     try:
@@ -35,13 +52,13 @@ def check_imports() -> bool:
         import hydra
         import omegaconf
 
-        print(f"torch              {torch.__version__}")
-        print(f"transformers       {transformers.__version__}")
-        print(f"transformer_lens   {transformer_lens.__version__}")
-        print(f"pyspiel            {getattr(pyspiel, '__version__', 'n/a')}")
-        print(f"numpy              {np.__version__}")
-        print(f"hydra              {hydra.__version__}")
-        print(f"omegaconf          {omegaconf.__version__}")
+        print(f"torch              {_version(torch, 'torch')}")
+        print(f"transformers       {_version(transformers, 'transformers')}")
+        print(f"transformer_lens   {_version(transformer_lens, 'transformer_lens')}")
+        print(f"pyspiel            {_version(pyspiel, 'open_spiel')}")
+        print(f"numpy              {_version(np, 'numpy')}")
+        print(f"hydra              {_version(hydra, 'hydra-core')}")
+        print(f"omegaconf          {_version(omegaconf, 'omegaconf')}")
         return True
     except Exception:
         traceback.print_exc()

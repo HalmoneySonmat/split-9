@@ -18,6 +18,7 @@ safetensors
 
 # --- Mechanistic interpretability ---
 transformer-lens==2.6.0
+typeguard>=4.0  # transitive dep of transformer-lens that pip occasionally misses
 
 # --- Go environment ---
 open_spiel==1.5

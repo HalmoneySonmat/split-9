@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "split-brain-go"
 version = "0.0.1"
 description = "Split-brain interpreter: an LLM that explains a Go-playing network's decisions via direct activation access."
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 license = { text = "Apache-2.0" }
 authors = [
     { name = "namdo" },
