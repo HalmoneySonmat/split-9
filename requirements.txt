@@ -1,0 +1,50 @@
+# Split-Brain Go: Phase 0 dependency lockfile
+# Python 3.10, CUDA 12.1, RTX 30/40 series
+# Install order matters; see phase0/environment_setup.md section 5.
+
+# --- PyTorch (install first, with CUDA index) ---
+# pip install torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu121
+torch==2.3.1
+torchvision==0.18.1
+
+# --- Core ML stack ---
+transformers==4.44.2
+accelerate==0.33.0
+bitsandbytes==0.43.3
+peft==0.12.0
+datasets==2.21.0
+sentencepiece==0.2.0
+safetensors
+
+# --- Mechanistic interpretability ---
+transformer-lens==2.6.0
+
+# --- Go environment ---
+open_spiel==1.5
+
+# --- Experiment tracking ---
+wandb==0.17.7
+tensorboard==2.17.0
+
+# --- Configuration management ---
+hydra-core==1.3.2
+omegaconf==2.3.0
+
+# --- Numerical / data ---
+numpy>=1.26,<2.0
+scipy==1.14.1
+pandas==2.2.2
+
+# --- Visualization ---
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# --- UX ---
+tqdm
+rich
+
+# --- Dev / quality ---
+pytest==8.3.2
+pytest-xdist
+ruff==0.6.3
+mypy==1.11.2

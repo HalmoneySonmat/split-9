@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "split-brain-go"
+version = "0.0.1"
+description = "Split-brain interpreter: an LLM that explains a Go-playing network's decisions via direct activation access."
+requires-python = ">=3.10,<3.12"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "namdo" },
+]
+readme = "README.md"
+keywords = ["mechanistic-interpretability", "go", "llm", "split-brain", "alphazero"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["split_brain_go*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["notebooks", "runs", "flamingo-pytorch"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "N"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+ignore_missing_imports = true
+warn_return_any = false
+warn_unused_configs = true
+exclude = ["notebooks", "runs", "flamingo-pytorch"]
+
+[tool.pytest.ini_options]
+addopts = "-q --strict-markers"
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with -m 'not slow')",
+    "gpu: marks tests requiring GPU",
+]
