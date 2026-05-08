@@ -163,6 +163,164 @@ All Phase 3 training signals come from (a) self-play game records and (b) automa
 
 ---
 
+## ADR-008 — GoEnv input channels = 8
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+OpenSpiel's `observation_tensor_shape` is `[4, 9, 9]`: black stones, white stones, empty cells, all-ones. AlphaGo Zero used 17 channels (8 own + 8 opp history + turn). We need a middle ground that gives GoNet enough perceptual signal without inflating model size on a small board.
+
+**Decision**.
+8 input channels, constructed in `env/encoding.py` (not via OpenSpiel's default tensor):
+
+| ch | Meaning |
+|----|---------|
+| 0  | Own stones (binary) |
+| 1  | Opponent stones (binary) |
+| 2  | Last move location (one-hot) |
+| 3  | 2nd-most-recent move (one-hot) |
+| 4  | 3rd-most-recent move (one-hot) |
+| 5  | 4th-most-recent move (one-hot) |
+| 6  | Turn plane (all 1 if Black to move, else all 0) |
+| 7  | Legal-move mask (1 where legal, exc. pass) |
+
+**Reasoning**.
+Own/opp split is canonical for two-player perspective games. Four-step history gives GoNet enough recency signal for ko detection and tactical patterns without a 17-channel parameter inflation. Explicit legal mask saves the model from learning rule constraints that the env already knows.
+
+**Consequences**.
+GoNet input shape is fixed at `(B, 8, 9, 9)`. Pass actions (action 81) do not contribute to history channels — those frames are zero. Channels 7 (legal mask) is informative but redundant with policy-head softmax masking; we expose it to give the model an inductive bias.
+
+---
+
+## ADR-009 — Residual block depth: PoC 4, full 6
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+Plan range is 3–6 residual blocks. PoC and full-training stages have different needs: PoC values fast iteration, full values capacity.
+
+**Decision**.
+PoC: 4 residual blocks. Full Phase 1.3b training: 6 residual blocks.
+
+**Reasoning**.
+4 blocks gives forward pass < 5 ms on RTX 3070 Ti even unoptimized — fast enough to debug self-play. 6 blocks is the upper bound for keeping parameter count under ~3M with 128 channels.
+
+**Consequences**.
+Hyperparam swap between PoC and full requires retraining (no warm-start). Acceptable since PoC is exploratory.
+
+---
+
+## ADR-010 — Channel width: PoC 64, full 128
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+Plan range is 64–128 channels.
+
+**Decision**.
+PoC: 64. Full: 128.
+
+**Reasoning**.
+With 4 res blocks × 64 ch ≈ 0.5M parameters, PoC forward is sub-millisecond on GPU. Full (6 × 128) ≈ 2.5M params, still well within 8 GB VRAM even with batched MCTS. Avoids over-sizing for a 9×9 board.
+
+---
+
+## ADR-011 — MCTS variant: PUCT (AlphaGo Zero)
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+Original plan says only "MCTS". Variants include UCT (UCB1), PUCT (AlphaGo Zero), MuZero-style.
+
+**Decision**.
+PUCT formula:
+```
+U(s,a) = c_puct · P(s,a) · √(N(s)) / (1 + N(s,a))
+selected_action = argmax_a [Q(s,a) + U(s,a)]
+```
+with `c_puct = 1.5`, Dirichlet noise α=0.25 added to root prior with weight 0.25.
+
+**Reasoning**.
+PUCT is the standard for neural-net-guided MCTS and is what every AlphaGo-Zero re-implementation uses. c_puct=1.5 is the AlphaZero paper's value; α=0.25 is standard for boards under 19×19.
+
+**Consequences**.
+MCTS implementation must accept policy prior (P) from GoNet, not just count-based UCB.
+
+---
+
+## ADR-012 — MCTS simulations: PoC 100, full 200
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+Plan range is 100–400.
+
+**Decision**.
+PoC self-play: 100 sims/move. Full training: 200. Evaluation (Phase 1.4): 400 (more careful play).
+
+**Reasoning**.
+200 is the AlphaGo Zero 9×9 reference. 400 at eval gives stronger play for fairer benchmark. PoC at 100 keeps iteration cycles fast.
+
+---
+
+## ADR-013 — Self-play data persistence: SGF + dict
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+Self-play games must be reusable across debug runs and replay-buffer warmup. Format choices: SGF (human-readable, standard), pickle (fastest), HDF5 (structured), custom binary.
+
+**Decision**.
+Store each game in two parallel files:
+- `game_{N}.sgf` — moves only, human-readable, viewable in any Go client.
+- `game_{N}.pkl` — additional training data (MCTS visit distributions, value targets) as pickled dict.
+
+**Reasoning**.
+SGF preserves the move record in a format any researcher can review (and that we can show in the paper). Pickle handles MCTS distributions efficiently. Storing both is cheap (a 9×9 game is < 5 KB in either format).
+
+**Consequences**.
+Replay buffer loader needs both files paired by game number. We use a `runs/games/` directory; disk overflow at 100 GB triggers oldest-first deletion.
+
+---
+
+## ADR-014 — Self-play / training schedule: alternating
+
+**Status**: Accepted, 2026-05-06.
+
+**Context**.
+Two extremes: (a) interleaved per-step (each self-play move triggers a training step) — complex sync. (b) Pure alternating — generate a fixed batch of self-play games, then train, then repeat.
+
+**Decision**.
+Alternating: generate **N=500 self-play games** with the current model, then train **for 1 epoch over the replay buffer**, then evaluate, then repeat.
+
+**Reasoning**.
+Simpler synchronization on a single GPU. 500 games × ~80 moves = ~40k samples added per cycle, which keeps the replay buffer (50 万 limit) fresh while letting old games still contribute. Cycle time on RTX 3070 Ti expected at 1–2 hours, giving ~12 cycles/day.
+
+**Consequences**.
+Total training run = roughly 200 cycles ≈ 2–3 weeks of wall-clock at 16 hours/day GPU usage. Fits Phase 1.3b's 4–6-week budget with room.
+
+---
+
+## ADR-015 — DP1 thresholds: 95% vs Random, 70% vs Greedy
+
+**Status**: Accepted, 2026-05-06. **Supersedes** the original plan's 80% vs Greedy.
+
+**Context**.
+The original plan set DP1 thresholds at vs Random 95%, vs Greedy 80%. The 80% bar against the *same model's* greedy policy is unusually high — well-trained policy networks often play near-optimally at argmax, leaving MCTS little room. Setting an unreachable bar would block Phase 2 entry on a metric whose threshold has no published precedent.
+
+**Decision**.
+- vs Random: ≥ 95% (unchanged).
+- vs Greedy (own model's argmax, no MCTS): ≥ 70%.
+- Self-play vs prior checkpoint: ELO improvement monotonic across at least 5 consecutive cycles.
+
+**Reasoning**.
+70% gives MCTS measurable lift over greedy without demanding that MCTS be dominant. Empirically, AlphaGo Zero papers report MCTS-vs-greedy gaps of 60–75% at convergence on 9×9.
+
+**Consequences**.
+Phase 1 entry to Phase 2 is gated on the new thresholds. If even 70% is missed, plan_review's escalation path (more sims, larger model) applies before relaxing further.
+
+---
+
 ## Conventions for future ADRs
 
 - One file (`decisions.md`) until count exceeds ~15, then split into `decisions/` directory.

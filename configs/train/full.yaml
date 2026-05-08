@@ -1,0 +1,55 @@
+# Phase 1.3b — Full training configuration.
+# Model: 6 residual blocks × 128 channels (~1.8M params, ADR-009/010).
+# MCTS:  200 simulations per move (ADR-012).
+# Batched mode for ~2x throughput on RTX 3070 Ti.
+#
+# CONSERVATIVE first run: 20 cycles (~2-3 hours). Once confirmed OK,
+# extend ``n_cycles`` to 100+ for the full training.
+
+seed: 42
+
+# Model — full (ADR-009 + ADR-010)
+n_blocks: 6
+channels: 128
+
+# Schedule — extended run for proper convergence (about 12-16h on RTX 3070 Ti)
+n_cycles: 100
+games_per_cycle: 10
+train_steps_per_cycle: 200
+
+# Self-play
+n_simulations: 200
+c_puct: 1.5
+dirichlet_alpha: 0.25
+dirichlet_weight: 0.25
+max_moves: 200
+
+# Batched mode (ADR-014, throughput)
+use_batched: true
+batch_n_games: 8
+
+# Optimization
+batch_size: 64
+lr: 0.001
+weight_decay: 0.0001
+grad_clip: 1.0
+
+# Buffer — full size for variety
+buffer_capacity: 200000
+min_buffer: 1000
+
+# Eval — both metrics, larger sample for less variance
+eval_n_games: 30
+eval_n_simulations: 100
+eval_max_moves: 200
+eval_against_greedy: true
+
+# IO
+checkpoint_dir: runs/checkpoints
+log_every: 25
+
+# Logging
+log_to: csv
+log_run_name: phase1-3b-full-v2
+log_dir: runs
+log_train_steps: false

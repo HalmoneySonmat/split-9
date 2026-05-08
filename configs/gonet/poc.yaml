@@ -1,0 +1,10 @@
+# PoC GoNet (ADR-009 / ADR-010) — fast iteration, ~0.5M params.
+# Used for Phase 1.3a "minimum working self-play" before scaling up.
+
+_target_: split_brain_go.gonet.network.GoNetConfig
+input_channels: 8
+n_blocks: 4
+channels: 64
+value_hidden: 64
+board_size: 9
+n_actions: 82

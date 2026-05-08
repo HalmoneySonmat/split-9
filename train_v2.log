@@ -1,0 +1,927 @@
+Training with config:
+  seed                     = 42
+  n_blocks                 = 6
+  channels                 = 128
+  n_cycles                 = 100
+  games_per_cycle          = 10
+  train_steps_per_cycle    = 200
+  n_simulations            = 200
+  c_puct                   = 1.5
+  dirichlet_alpha          = 0.25
+  dirichlet_weight         = 0.25
+  max_moves                = 200
+  use_batched              = True
+  batch_n_games            = 8
+  batch_size               = 64
+  lr                       = 0.001
+  weight_decay             = 0.0001
+  grad_clip                = 1.0
+  buffer_capacity          = 200000
+  min_buffer               = 1000
+  eval_n_games             = 30
+  eval_n_simulations       = 100
+  eval_max_moves           = 200
+  eval_against_greedy      = True
+  checkpoint_dir           = runs/checkpoints
+  log_every                = 25
+  log_to                   = csv
+  log_run_name             = phase1-3b-full-v2
+  log_dir                  = runs
+  log_train_steps          = False
+
+Logging metrics to: runs/phase1-3b-full-v2
+cycle 0/99 done in 573.9s — winrate vs random = 0.73, winrate vs greedy = 0.50, buffer size = 655
+  cycle=1 step=   0 loss=5.4909 policy=4.5098 value=0.9812
+  cycle=1 step=  25 loss=4.1402 policy=4.0650 value=0.0751
+  cycle=1 step=  50 loss=4.0041 policy=4.0015 value=0.0026
+  cycle=1 step=  75 loss=3.8515 policy=3.8501 value=0.0014
+  cycle=1 step= 100 loss=3.7982 policy=3.7971 value=0.0011
+  cycle=1 step= 125 loss=3.8744 policy=3.7831 value=0.0913
+  cycle=1 step= 150 loss=3.9171 policy=3.8564 value=0.0606
+  cycle=1 step= 175 loss=3.6646 policy=3.6637 value=0.0009
+cycle 1/99 done in 313.1s — winrate vs random = 0.67, winrate vs greedy = 1.00, buffer size = 1196
+  cycle=2 step=   0 loss=4.2604 policy=3.9329 value=0.3275
+  cycle=2 step=  25 loss=3.8846 policy=3.8767 value=0.0078
+  cycle=2 step=  50 loss=3.6814 policy=3.6650 value=0.0164
+  cycle=2 step=  75 loss=3.7084 policy=3.6500 value=0.0583
+  cycle=2 step= 100 loss=3.4756 policy=3.4669 value=0.0088
+  cycle=2 step= 125 loss=3.4925 policy=3.4881 value=0.0044
+  cycle=2 step= 150 loss=3.4895 policy=3.4292 value=0.0603
+  cycle=2 step= 175 loss=3.4768 policy=3.3954 value=0.0814
+cycle 2/99 done in 425.0s — winrate vs random = 0.67, winrate vs greedy = 1.00, buffer size = 1926
+  cycle=3 step=   0 loss=3.4735 policy=3.4308 value=0.0428
+  cycle=3 step=  25 loss=3.2986 policy=3.2930 value=0.0057
+  cycle=3 step=  50 loss=3.0997 policy=3.0956 value=0.0041
+  cycle=3 step=  75 loss=3.1689 policy=3.1180 value=0.0509
+  cycle=3 step= 100 loss=3.2043 policy=3.1669 value=0.0373
+  cycle=3 step= 125 loss=3.2037 policy=3.0903 value=0.1134
+  cycle=3 step= 150 loss=2.7377 policy=2.7347 value=0.0030
+  cycle=3 step= 175 loss=2.8251 policy=2.8145 value=0.0106
+cycle 3/99 done in 490.4s — winrate vs random = 0.80, winrate vs greedy = 1.00, buffer size = 2498
+  cycle=4 step=   0 loss=3.5289 policy=3.0235 value=0.5054
+  cycle=4 step=  25 loss=3.0048 policy=2.9420 value=0.0628
+  cycle=4 step=  50 loss=3.0350 policy=3.0215 value=0.0135
+  cycle=4 step=  75 loss=2.9989 policy=2.9286 value=0.0702
+  cycle=4 step= 100 loss=3.0099 policy=2.9081 value=0.1017
+  cycle=4 step= 125 loss=2.7059 policy=2.7040 value=0.0019
+  cycle=4 step= 150 loss=2.9824 policy=2.9483 value=0.0341
+  cycle=4 step= 175 loss=2.7083 policy=2.7079 value=0.0003
+cycle 4/99 done in 421.9s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 3398
+  cycle=5 step=   0 loss=3.2096 policy=2.9633 value=0.2463
+  cycle=5 step=  25 loss=2.8195 policy=2.7762 value=0.0433
+  cycle=5 step=  50 loss=3.0172 policy=2.9853 value=0.0318
+  cycle=5 step=  75 loss=2.8664 policy=2.8631 value=0.0033
+  cycle=5 step= 100 loss=2.8325 policy=2.8251 value=0.0074
+  cycle=5 step= 125 loss=2.6803 policy=2.6406 value=0.0397
+  cycle=5 step= 150 loss=2.7308 policy=2.7298 value=0.0010
+  cycle=5 step= 175 loss=2.8921 policy=2.8728 value=0.0193
+cycle 5/99 done in 458.7s — winrate vs random = 0.77, winrate vs greedy = 1.00, buffer size = 4026
+  cycle=6 step=   0 loss=2.7218 policy=2.5699 value=0.1519
+  cycle=6 step=  25 loss=2.9478 policy=2.9338 value=0.0140
+  cycle=6 step=  50 loss=2.9374 policy=2.8710 value=0.0664
+  cycle=6 step=  75 loss=2.9454 policy=2.9373 value=0.0082
+  cycle=6 step= 100 loss=3.0427 policy=2.9798 value=0.0628
+  cycle=6 step= 125 loss=2.7729 policy=2.7715 value=0.0014
+  cycle=6 step= 150 loss=2.9455 policy=2.8808 value=0.0647
+  cycle=6 step= 175 loss=2.6182 policy=2.6159 value=0.0022
+cycle 6/99 done in 394.0s — winrate vs random = 0.77, winrate vs greedy = 1.00, buffer size = 4868
+  cycle=7 step=   0 loss=3.3037 policy=3.0815 value=0.2222
+  cycle=7 step=  25 loss=2.9154 policy=2.8494 value=0.0659
+  cycle=7 step=  50 loss=2.9096 policy=2.8856 value=0.0240
+  cycle=7 step=  75 loss=2.4825 policy=2.4405 value=0.0420
+  cycle=7 step= 100 loss=2.7724 policy=2.6668 value=0.1056
+  cycle=7 step= 125 loss=2.8907 policy=2.8524 value=0.0383
+  cycle=7 step= 150 loss=2.7243 policy=2.6542 value=0.0701
+  cycle=7 step= 175 loss=2.7355 policy=2.7083 value=0.0272
+cycle 7/99 done in 543.5s — winrate vs random = 0.60, winrate vs greedy = 1.00, buffer size = 5820
+  cycle=8 step=   0 loss=2.8705 policy=2.6418 value=0.2287
+  cycle=8 step=  25 loss=2.8886 policy=2.7929 value=0.0958
+  cycle=8 step=  50 loss=2.8931 policy=2.8343 value=0.0588
+  cycle=8 step=  75 loss=2.4838 policy=2.3606 value=0.1232
+  cycle=8 step= 100 loss=2.6526 policy=2.6014 value=0.0513
+  cycle=8 step= 125 loss=2.7754 policy=2.5611 value=0.2143
+  cycle=8 step= 150 loss=2.7096 policy=2.5643 value=0.1453
+  cycle=8 step= 175 loss=2.6588 policy=2.5839 value=0.0749
+cycle 8/99 done in 414.4s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 6761
+  cycle=9 step=   0 loss=3.0610 policy=2.7185 value=0.3425
+  cycle=9 step=  25 loss=2.7209 policy=2.6664 value=0.0545
+  cycle=9 step=  50 loss=2.5202 policy=2.4533 value=0.0669
+  cycle=9 step=  75 loss=2.6287 policy=2.5870 value=0.0416
+  cycle=9 step= 100 loss=2.7344 policy=2.6248 value=0.1096
+  cycle=9 step= 125 loss=2.7041 policy=2.6493 value=0.0547
+  cycle=9 step= 150 loss=2.4607 policy=2.4256 value=0.0351
+  cycle=9 step= 175 loss=2.6241 policy=2.6182 value=0.0060
+cycle 9/99 done in 544.5s — winrate vs random = 0.67, winrate vs greedy = 1.00, buffer size = 7611
+  cycle=10 step=   0 loss=3.0790 policy=3.0077 value=0.0713
+  cycle=10 step=  25 loss=2.7645 policy=2.4897 value=0.2748
+  cycle=10 step=  50 loss=2.5382 policy=2.4061 value=0.1320
+  cycle=10 step=  75 loss=2.8099 policy=2.7868 value=0.0231
+  cycle=10 step= 100 loss=2.5554 policy=2.5173 value=0.0380
+  cycle=10 step= 125 loss=2.6567 policy=2.6403 value=0.0164
+  cycle=10 step= 150 loss=2.4484 policy=2.3918 value=0.0566
+  cycle=10 step= 175 loss=2.4105 policy=2.4039 value=0.0065
+cycle 10/99 done in 526.8s — winrate vs random = 0.80, winrate vs greedy = 1.00, buffer size = 8482
+  cycle=11 step=   0 loss=2.8394 policy=2.7088 value=0.1306
+  cycle=11 step=  25 loss=2.8076 policy=2.6567 value=0.1509
+  cycle=11 step=  50 loss=2.6007 policy=2.5522 value=0.0485
+  cycle=11 step=  75 loss=2.8673 policy=2.7204 value=0.1469
+  cycle=11 step= 100 loss=2.6892 policy=2.6463 value=0.0429
+  cycle=11 step= 125 loss=2.5462 policy=2.5038 value=0.0423
+  cycle=11 step= 150 loss=2.3654 policy=2.3644 value=0.0011
+  cycle=11 step= 175 loss=2.6504 policy=2.5912 value=0.0592
+cycle 11/99 done in 466.7s — winrate vs random = 0.80, winrate vs greedy = 1.00, buffer size = 9516
+  cycle=12 step=   0 loss=2.7281 policy=2.6022 value=0.1258
+  cycle=12 step=  25 loss=2.8607 policy=2.5612 value=0.2995
+  cycle=12 step=  50 loss=2.5640 policy=2.5463 value=0.0177
+  cycle=12 step=  75 loss=2.7762 policy=2.7181 value=0.0581
+  cycle=12 step= 100 loss=2.6746 policy=2.6156 value=0.0591
+  cycle=12 step= 125 loss=2.3945 policy=2.3774 value=0.0171
+  cycle=12 step= 150 loss=2.4141 policy=2.4023 value=0.0118
+  cycle=12 step= 175 loss=2.3675 policy=2.3321 value=0.0354
+cycle 12/99 done in 466.4s — winrate vs random = 0.73, winrate vs greedy = 1.00, buffer size = 10411
+  cycle=13 step=   0 loss=2.5545 policy=2.4482 value=0.1063
+  cycle=13 step=  25 loss=2.8913 policy=2.8598 value=0.0316
+  cycle=13 step=  50 loss=2.8217 policy=2.6893 value=0.1324
+  cycle=13 step=  75 loss=2.6103 policy=2.5355 value=0.0748
+  cycle=13 step= 100 loss=2.3203 policy=2.3073 value=0.0130
+  cycle=13 step= 125 loss=2.2035 policy=2.2003 value=0.0032
+  cycle=13 step= 150 loss=2.6979 policy=2.6269 value=0.0710
+  cycle=13 step= 175 loss=2.5097 policy=2.4585 value=0.0513
+cycle 13/99 done in 497.2s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 11261
+  cycle=14 step=   0 loss=2.6731 policy=2.5311 value=0.1420
+  cycle=14 step=  25 loss=2.5633 policy=2.4976 value=0.0656
+  cycle=14 step=  50 loss=2.8501 policy=2.6860 value=0.1640
+  cycle=14 step=  75 loss=2.7210 policy=2.6710 value=0.0500
+  cycle=14 step= 100 loss=2.5582 policy=2.5135 value=0.0446
+  cycle=14 step= 125 loss=2.5609 policy=2.4345 value=0.1264
+  cycle=14 step= 150 loss=2.4959 policy=2.4367 value=0.0592
+  cycle=14 step= 175 loss=2.5084 policy=2.5012 value=0.0072
+cycle 14/99 done in 551.8s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 12257
+  cycle=15 step=   0 loss=2.7134 policy=2.6321 value=0.0813
+  cycle=15 step=  25 loss=2.6211 policy=2.5840 value=0.0371
+  cycle=15 step=  50 loss=2.8361 policy=2.7634 value=0.0727
+  cycle=15 step=  75 loss=2.5061 policy=2.3602 value=0.1460
+  cycle=15 step= 100 loss=2.6249 policy=2.5169 value=0.1080
+  cycle=15 step= 125 loss=2.5847 policy=2.4973 value=0.0874
+  cycle=15 step= 150 loss=2.5038 policy=2.4304 value=0.0734
+  cycle=15 step= 175 loss=2.4088 policy=2.4081 value=0.0007
+cycle 15/99 done in 586.4s — winrate vs random = 0.83, winrate vs greedy = 0.50, buffer size = 13166
+  cycle=16 step=   0 loss=2.7923 policy=2.6499 value=0.1424
+  cycle=16 step=  25 loss=2.5653 policy=2.4230 value=0.1423
+  cycle=16 step=  50 loss=2.5523 policy=2.4929 value=0.0593
+  cycle=16 step=  75 loss=2.2430 policy=2.1955 value=0.0475
+  cycle=16 step= 100 loss=2.8018 policy=2.7831 value=0.0187
+  cycle=16 step= 125 loss=2.5394 policy=2.4416 value=0.0978
+  cycle=16 step= 150 loss=2.5313 policy=2.4890 value=0.0423
+  cycle=16 step= 175 loss=2.8037 policy=2.5839 value=0.2198
+cycle 16/99 done in 560.6s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 14214
+  cycle=17 step=   0 loss=2.8835 policy=2.6562 value=0.2272
+  cycle=17 step=  25 loss=3.0034 policy=2.6556 value=0.3478
+  cycle=17 step=  50 loss=2.6624 policy=2.5996 value=0.0628
+  cycle=17 step=  75 loss=2.6867 policy=2.6312 value=0.0555
+  cycle=17 step= 100 loss=2.5409 policy=2.4376 value=0.1033
+  cycle=17 step= 125 loss=2.4020 policy=2.3582 value=0.0438
+  cycle=17 step= 150 loss=2.5502 policy=2.4476 value=0.1026
+  cycle=17 step= 175 loss=2.5164 policy=2.3930 value=0.1234
+cycle 17/99 done in 485.6s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 15280
+  cycle=18 step=   0 loss=2.6263 policy=2.5814 value=0.0449
+  cycle=18 step=  25 loss=2.4599 policy=2.4193 value=0.0405
+  cycle=18 step=  50 loss=2.4669 policy=2.4195 value=0.0474
+  cycle=18 step=  75 loss=2.7891 policy=2.6802 value=0.1090
+  cycle=18 step= 100 loss=2.7676 policy=2.7084 value=0.0593
+  cycle=18 step= 125 loss=2.3624 policy=2.3514 value=0.0111
+  cycle=18 step= 150 loss=2.6261 policy=2.5657 value=0.0605
+  cycle=18 step= 175 loss=2.4945 policy=2.4766 value=0.0179
+cycle 18/99 done in 455.8s — winrate vs random = 0.90, winrate vs greedy = 0.50, buffer size = 16304
+  cycle=19 step=   0 loss=2.3328 policy=2.2729 value=0.0599
+  cycle=19 step=  25 loss=2.4909 policy=2.4547 value=0.0363
+  cycle=19 step=  50 loss=2.6199 policy=2.6168 value=0.0031
+  cycle=19 step=  75 loss=2.4602 policy=2.4449 value=0.0153
+  cycle=19 step= 100 loss=2.6381 policy=2.5620 value=0.0760
+  cycle=19 step= 125 loss=2.6591 policy=2.6108 value=0.0483
+  cycle=19 step= 150 loss=2.7181 policy=2.6638 value=0.0543
+  cycle=19 step= 175 loss=2.5194 policy=2.4853 value=0.0341
+cycle 19/99 done in 443.4s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 17206
+  cycle=20 step=   0 loss=2.7039 policy=2.6213 value=0.0826
+  cycle=20 step=  25 loss=2.6567 policy=2.6560 value=0.0007
+  cycle=20 step=  50 loss=2.7226 policy=2.6826 value=0.0400
+  cycle=20 step=  75 loss=2.6920 policy=2.6043 value=0.0877
+  cycle=20 step= 100 loss=2.6181 policy=2.4674 value=0.1507
+  cycle=20 step= 125 loss=2.4919 policy=2.4505 value=0.0414
+  cycle=20 step= 150 loss=2.5819 policy=2.5593 value=0.0226
+  cycle=20 step= 175 loss=2.4326 policy=2.3041 value=0.1285
+cycle 20/99 done in 402.4s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 18193
+  cycle=21 step=   0 loss=2.6324 policy=2.5332 value=0.0991
+  cycle=21 step=  25 loss=2.8097 policy=2.5785 value=0.2312
+  cycle=21 step=  50 loss=2.8925 policy=2.7036 value=0.1889
+  cycle=21 step=  75 loss=2.6770 policy=2.5409 value=0.1361
+  cycle=21 step= 100 loss=2.3941 policy=2.3648 value=0.0292
+  cycle=21 step= 125 loss=2.5395 policy=2.4794 value=0.0601
+  cycle=21 step= 150 loss=2.5497 policy=2.4896 value=0.0600
+  cycle=21 step= 175 loss=2.6663 policy=2.5422 value=0.1241
+cycle 21/99 done in 489.1s — winrate vs random = 0.77, winrate vs greedy = 0.50, buffer size = 19371
+  cycle=22 step=   0 loss=2.5758 policy=2.5296 value=0.0462
+  cycle=22 step=  25 loss=2.7164 policy=2.5694 value=0.1470
+  cycle=22 step=  50 loss=2.5272 policy=2.3897 value=0.1375
+  cycle=22 step=  75 loss=2.6000 policy=2.5483 value=0.0517
+  cycle=22 step= 100 loss=2.7355 policy=2.7151 value=0.0204
+  cycle=22 step= 125 loss=2.9745 policy=2.8637 value=0.1108
+  cycle=22 step= 150 loss=2.8369 policy=2.8012 value=0.0358
+  cycle=22 step= 175 loss=2.5538 policy=2.4536 value=0.1001
+cycle 22/99 done in 431.6s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 20422
+  cycle=23 step=   0 loss=2.8498 policy=2.6750 value=0.1748
+  cycle=23 step=  25 loss=2.9816 policy=2.7173 value=0.2643
+  cycle=23 step=  50 loss=2.5575 policy=2.5270 value=0.0305
+  cycle=23 step=  75 loss=2.6525 policy=2.5397 value=0.1127
+  cycle=23 step= 100 loss=2.2374 policy=2.1402 value=0.0972
+  cycle=23 step= 125 loss=2.4413 policy=2.4342 value=0.0071
+  cycle=23 step= 150 loss=2.3537 policy=2.2707 value=0.0829
+  cycle=23 step= 175 loss=2.6800 policy=2.5827 value=0.0973
+cycle 23/99 done in 397.9s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 21330
+  cycle=24 step=   0 loss=2.6049 policy=2.4713 value=0.1336
+  cycle=24 step=  25 loss=2.7646 policy=2.6237 value=0.1409
+  cycle=24 step=  50 loss=2.4795 policy=2.4021 value=0.0774
+  cycle=24 step=  75 loss=2.6530 policy=2.4819 value=0.1711
+  cycle=24 step= 100 loss=2.4980 policy=2.4147 value=0.0833
+  cycle=24 step= 125 loss=2.5608 policy=2.4856 value=0.0751
+  cycle=24 step= 150 loss=2.3808 policy=2.3128 value=0.0680
+  cycle=24 step= 175 loss=2.8664 policy=2.7590 value=0.1074
+cycle 24/99 done in 439.0s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 22351
+  cycle=25 step=   0 loss=2.6864 policy=2.4721 value=0.2143
+  cycle=25 step=  25 loss=2.4226 policy=2.3695 value=0.0531
+  cycle=25 step=  50 loss=2.4718 policy=2.4302 value=0.0416
+  cycle=25 step=  75 loss=2.7098 policy=2.5771 value=0.1327
+  cycle=25 step= 100 loss=2.3353 policy=2.2769 value=0.0584
+  cycle=25 step= 125 loss=2.6692 policy=2.4587 value=0.2105
+  cycle=25 step= 150 loss=2.5461 policy=2.5325 value=0.0136
+  cycle=25 step= 175 loss=2.5833 policy=2.4860 value=0.0973
+cycle 25/99 done in 512.6s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 23472
+  cycle=26 step=   0 loss=2.6045 policy=2.5788 value=0.0257
+  cycle=26 step=  25 loss=2.6948 policy=2.6049 value=0.0899
+  cycle=26 step=  50 loss=2.5429 policy=2.4174 value=0.1255
+  cycle=26 step=  75 loss=2.5527 policy=2.4879 value=0.0648
+  cycle=26 step= 100 loss=2.7549 policy=2.6650 value=0.0900
+  cycle=26 step= 125 loss=2.7366 policy=2.5687 value=0.1679
+  cycle=26 step= 150 loss=2.5968 policy=2.5008 value=0.0960
+  cycle=26 step= 175 loss=2.5447 policy=2.4373 value=0.1074
+cycle 26/99 done in 423.5s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 24608
+  cycle=27 step=   0 loss=2.5936 policy=2.5078 value=0.0858
+  cycle=27 step=  25 loss=2.7640 policy=2.5958 value=0.1682
+  cycle=27 step=  50 loss=2.6777 policy=2.5707 value=0.1070
+  cycle=27 step=  75 loss=2.5975 policy=2.4478 value=0.1496
+  cycle=27 step= 100 loss=2.7386 policy=2.7082 value=0.0305
+  cycle=27 step= 125 loss=2.8167 policy=2.7003 value=0.1163
+  cycle=27 step= 150 loss=2.5864 policy=2.4047 value=0.1816
+  cycle=27 step= 175 loss=2.6447 policy=2.5408 value=0.1039
+cycle 27/99 done in 547.3s — winrate vs random = 0.87, winrate vs greedy = 0.50, buffer size = 25679
+  cycle=28 step=   0 loss=2.4893 policy=2.3976 value=0.0917
+  cycle=28 step=  25 loss=2.3390 policy=2.2968 value=0.0422
+  cycle=28 step=  50 loss=2.4315 policy=2.3842 value=0.0473
+  cycle=28 step=  75 loss=2.5678 policy=2.5391 value=0.0286
+  cycle=28 step= 100 loss=2.7106 policy=2.5972 value=0.1134
+  cycle=28 step= 125 loss=2.4582 policy=2.3395 value=0.1187
+  cycle=28 step= 150 loss=2.7070 policy=2.5932 value=0.1137
+  cycle=28 step= 175 loss=2.4163 policy=2.4092 value=0.0070
+cycle 28/99 done in 512.5s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 26752
+  cycle=29 step=   0 loss=2.5452 policy=2.4569 value=0.0883
+  cycle=29 step=  25 loss=2.5673 policy=2.4413 value=0.1260
+  cycle=29 step=  50 loss=2.5986 policy=2.4991 value=0.0995
+  cycle=29 step=  75 loss=2.6317 policy=2.4960 value=0.1357
+  cycle=29 step= 100 loss=2.4801 policy=2.3112 value=0.1688
+  cycle=29 step= 125 loss=2.4052 policy=2.3827 value=0.0224
+  cycle=29 step= 150 loss=2.4428 policy=2.4179 value=0.0249
+  cycle=29 step= 175 loss=2.8173 policy=2.7414 value=0.0759
+cycle 29/99 done in 531.0s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 27973
+  cycle=30 step=   0 loss=2.6121 policy=2.4798 value=0.1324
+  cycle=30 step=  25 loss=2.6189 policy=2.4929 value=0.1261
+  cycle=30 step=  50 loss=2.4814 policy=2.4537 value=0.0277
+  cycle=30 step=  75 loss=2.5771 policy=2.5060 value=0.0712
+  cycle=30 step= 100 loss=2.4291 policy=2.3428 value=0.0863
+  cycle=30 step= 125 loss=2.5683 policy=2.4491 value=0.1192
+  cycle=30 step= 150 loss=2.0950 policy=2.0559 value=0.0391
+  cycle=30 step= 175 loss=2.6660 policy=2.6319 value=0.0341
+cycle 30/99 done in 443.0s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 29160
+  cycle=31 step=   0 loss=2.4589 policy=2.3798 value=0.0790
+  cycle=31 step=  25 loss=2.6808 policy=2.5792 value=0.1016
+  cycle=31 step=  50 loss=2.4769 policy=2.4329 value=0.0440
+  cycle=31 step=  75 loss=2.4970 policy=2.3975 value=0.0995
+  cycle=31 step= 100 loss=2.5965 policy=2.4445 value=0.1520
+  cycle=31 step= 125 loss=2.4194 policy=2.3431 value=0.0763
+  cycle=31 step= 150 loss=2.5215 policy=2.4232 value=0.0983
+  cycle=31 step= 175 loss=2.4762 policy=2.3210 value=0.1553
+cycle 31/99 done in 464.9s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 30211
+  cycle=32 step=   0 loss=2.5279 policy=2.4431 value=0.0848
+  cycle=32 step=  25 loss=2.3561 policy=2.2578 value=0.0984
+  cycle=32 step=  50 loss=2.4347 policy=2.3399 value=0.0948
+  cycle=32 step=  75 loss=2.3406 policy=2.2380 value=0.1027
+  cycle=32 step= 100 loss=2.4716 policy=2.4302 value=0.0414
+  cycle=32 step= 125 loss=2.7804 policy=2.6664 value=0.1140
+  cycle=32 step= 150 loss=2.5193 policy=2.4887 value=0.0306
+  cycle=32 step= 175 loss=2.5763 policy=2.5515 value=0.0248
+cycle 32/99 done in 411.0s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 31250
+  cycle=33 step=   0 loss=2.5134 policy=2.3887 value=0.1247
+  cycle=33 step=  25 loss=2.6408 policy=2.5938 value=0.0470
+  cycle=33 step=  50 loss=2.5733 policy=2.5226 value=0.0507
+  cycle=33 step=  75 loss=2.4348 policy=2.3565 value=0.0783
+  cycle=33 step= 100 loss=2.5267 policy=2.4128 value=0.1138
+  cycle=33 step= 125 loss=2.6007 policy=2.5602 value=0.0405
+  cycle=33 step= 150 loss=2.6663 policy=2.5777 value=0.0886
+  cycle=33 step= 175 loss=2.4551 policy=2.4115 value=0.0435
+cycle 33/99 done in 486.5s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 32410
+  cycle=34 step=   0 loss=2.7052 policy=2.6530 value=0.0523
+  cycle=34 step=  25 loss=2.8231 policy=2.6612 value=0.1618
+  cycle=34 step=  50 loss=2.5974 policy=2.4888 value=0.1085
+  cycle=34 step=  75 loss=2.5606 policy=2.4820 value=0.0787
+  cycle=34 step= 100 loss=2.4597 policy=2.4169 value=0.0429
+  cycle=34 step= 125 loss=2.3773 policy=2.3403 value=0.0370
+  cycle=34 step= 150 loss=2.3053 policy=2.2969 value=0.0084
+  cycle=34 step= 175 loss=2.4279 policy=2.4232 value=0.0047
+cycle 34/99 done in 522.4s — winrate vs random = 0.77, winrate vs greedy = 1.00, buffer size = 33566
+  cycle=35 step=   0 loss=2.4456 policy=2.3880 value=0.0576
+  cycle=35 step=  25 loss=2.6823 policy=2.5932 value=0.0891
+  cycle=35 step=  50 loss=2.3687 policy=2.3177 value=0.0510
+  cycle=35 step=  75 loss=2.8146 policy=2.6934 value=0.1213
+  cycle=35 step= 100 loss=2.5932 policy=2.5669 value=0.0263
+  cycle=35 step= 125 loss=2.4285 policy=2.3859 value=0.0426
+  cycle=35 step= 150 loss=2.4392 policy=2.3831 value=0.0562
+  cycle=35 step= 175 loss=2.7245 policy=2.5334 value=0.1911
+cycle 35/99 done in 442.7s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 34517
+  cycle=36 step=   0 loss=2.6684 policy=2.5272 value=0.1412
+  cycle=36 step=  25 loss=2.5327 policy=2.3671 value=0.1656
+  cycle=36 step=  50 loss=2.6603 policy=2.5431 value=0.1173
+  cycle=36 step=  75 loss=2.7526 policy=2.5685 value=0.1841
+  cycle=36 step= 100 loss=2.5443 policy=2.4279 value=0.1164
+  cycle=36 step= 125 loss=2.6412 policy=2.4643 value=0.1769
+  cycle=36 step= 150 loss=2.4276 policy=2.4023 value=0.0253
+  cycle=36 step= 175 loss=2.4985 policy=2.4371 value=0.0614
+cycle 36/99 done in 428.3s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 35560
+  cycle=37 step=   0 loss=2.5773 policy=2.5093 value=0.0680
+  cycle=37 step=  25 loss=2.4849 policy=2.4500 value=0.0349
+  cycle=37 step=  50 loss=2.5907 policy=2.5416 value=0.0491
+  cycle=37 step=  75 loss=2.7741 policy=2.5444 value=0.2297
+  cycle=37 step= 100 loss=2.6666 policy=2.5126 value=0.1540
+  cycle=37 step= 125 loss=2.6177 policy=2.5419 value=0.0758
+  cycle=37 step= 150 loss=2.4397 policy=2.3292 value=0.1105
+  cycle=37 step= 175 loss=2.4802 policy=2.4554 value=0.0248
+cycle 37/99 done in 487.6s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 36544
+  cycle=38 step=   0 loss=2.3099 policy=2.2765 value=0.0333
+  cycle=38 step=  25 loss=2.5214 policy=2.4405 value=0.0808
+  cycle=38 step=  50 loss=2.5173 policy=2.4723 value=0.0450
+  cycle=38 step=  75 loss=2.5949 policy=2.4639 value=0.1310
+  cycle=38 step= 100 loss=2.7335 policy=2.6119 value=0.1216
+  cycle=38 step= 125 loss=2.7622 policy=2.6704 value=0.0918
+  cycle=38 step= 150 loss=2.1772 policy=2.1306 value=0.0466
+  cycle=38 step= 175 loss=2.3597 policy=2.3423 value=0.0174
+cycle 38/99 done in 493.9s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 37720
+  cycle=39 step=   0 loss=2.6943 policy=2.6217 value=0.0726
+  cycle=39 step=  25 loss=2.4963 policy=2.4588 value=0.0376
+  cycle=39 step=  50 loss=2.7564 policy=2.6112 value=0.1451
+  cycle=39 step=  75 loss=2.6181 policy=2.5292 value=0.0889
+  cycle=39 step= 100 loss=2.6698 policy=2.6074 value=0.0623
+  cycle=39 step= 125 loss=2.5468 policy=2.5345 value=0.0123
+  cycle=39 step= 150 loss=2.5328 policy=2.4679 value=0.0649
+  cycle=39 step= 175 loss=2.7685 policy=2.6655 value=0.1030
+cycle 39/99 done in 526.6s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 38967
+  cycle=40 step=   0 loss=2.4885 policy=2.3731 value=0.1154
+  cycle=40 step=  25 loss=2.5399 policy=2.4846 value=0.0553
+  cycle=40 step=  50 loss=2.5084 policy=2.4487 value=0.0597
+  cycle=40 step=  75 loss=2.5548 policy=2.4471 value=0.1076
+  cycle=40 step= 100 loss=2.5234 policy=2.3685 value=0.1548
+  cycle=40 step= 125 loss=2.7145 policy=2.5461 value=0.1684
+  cycle=40 step= 150 loss=2.5770 policy=2.4789 value=0.0981
+  cycle=40 step= 175 loss=2.6346 policy=2.5653 value=0.0693
+cycle 40/99 done in 562.0s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 40024
+  cycle=41 step=   0 loss=2.5228 policy=2.4435 value=0.0793
+  cycle=41 step=  25 loss=2.4208 policy=2.4182 value=0.0027
+  cycle=41 step=  50 loss=2.4136 policy=2.3071 value=0.1065
+  cycle=41 step=  75 loss=2.4206 policy=2.3395 value=0.0810
+  cycle=41 step= 100 loss=2.5529 policy=2.4221 value=0.1308
+  cycle=41 step= 125 loss=2.5433 policy=2.5059 value=0.0374
+  cycle=41 step= 150 loss=2.5894 policy=2.5593 value=0.0301
+  cycle=41 step= 175 loss=2.5673 policy=2.5005 value=0.0668
+cycle 41/99 done in 489.1s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 41075
+  cycle=42 step=   0 loss=2.6204 policy=2.5356 value=0.0849
+  cycle=42 step=  25 loss=2.3800 policy=2.2550 value=0.1250
+  cycle=42 step=  50 loss=2.5973 policy=2.4983 value=0.0990
+  cycle=42 step=  75 loss=2.5466 policy=2.4987 value=0.0479
+  cycle=42 step= 100 loss=2.5887 policy=2.5160 value=0.0727
+  cycle=42 step= 125 loss=2.6483 policy=2.5008 value=0.1475
+  cycle=42 step= 150 loss=2.7317 policy=2.6053 value=0.1264
+  cycle=42 step= 175 loss=2.8518 policy=2.6719 value=0.1799
+cycle 42/99 done in 527.8s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 42135
+  cycle=43 step=   0 loss=2.6234 policy=2.5039 value=0.1195
+  cycle=43 step=  25 loss=2.6171 policy=2.5390 value=0.0781
+  cycle=43 step=  50 loss=2.4124 policy=2.3081 value=0.1042
+  cycle=43 step=  75 loss=2.5843 policy=2.4625 value=0.1218
+  cycle=43 step= 100 loss=2.3175 policy=2.2897 value=0.0279
+  cycle=43 step= 125 loss=2.4694 policy=2.3749 value=0.0945
+  cycle=43 step= 150 loss=2.4095 policy=2.2954 value=0.1141
+  cycle=43 step= 175 loss=2.4621 policy=2.3593 value=0.1029
+cycle 43/99 done in 537.5s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 43287
+  cycle=44 step=   0 loss=2.4285 policy=2.3760 value=0.0525
+  cycle=44 step=  25 loss=2.5233 policy=2.3644 value=0.1589
+  cycle=44 step=  50 loss=2.5052 policy=2.2928 value=0.2124
+  cycle=44 step=  75 loss=2.7593 policy=2.6996 value=0.0598
+  cycle=44 step= 100 loss=2.3054 policy=2.2217 value=0.0837
+  cycle=44 step= 125 loss=2.7323 policy=2.5984 value=0.1339
+  cycle=44 step= 150 loss=2.4975 policy=2.3795 value=0.1180
+  cycle=44 step= 175 loss=2.4216 policy=2.2978 value=0.1239
+cycle 44/99 done in 458.4s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 44514
+  cycle=45 step=   0 loss=2.5378 policy=2.5005 value=0.0374
+  cycle=45 step=  25 loss=2.5917 policy=2.3688 value=0.2229
+  cycle=45 step=  50 loss=2.6023 policy=2.5302 value=0.0722
+  cycle=45 step=  75 loss=2.6323 policy=2.5588 value=0.0735
+  cycle=45 step= 100 loss=2.5022 policy=2.4135 value=0.0887
+  cycle=45 step= 125 loss=2.6876 policy=2.6167 value=0.0709
+  cycle=45 step= 150 loss=2.7221 policy=2.5728 value=0.1493
+  cycle=45 step= 175 loss=2.5124 policy=2.3525 value=0.1599
+cycle 45/99 done in 536.3s — winrate vs random = 0.90, winrate vs greedy = 0.50, buffer size = 45679
+  cycle=46 step=   0 loss=2.4584 policy=2.2859 value=0.1724
+  cycle=46 step=  25 loss=2.4447 policy=2.4222 value=0.0225
+  cycle=46 step=  50 loss=2.2941 policy=2.2691 value=0.0250
+  cycle=46 step=  75 loss=2.9451 policy=2.6678 value=0.2773
+  cycle=46 step= 100 loss=2.5230 policy=2.4528 value=0.0702
+  cycle=46 step= 125 loss=2.3799 policy=2.3779 value=0.0019
+  cycle=46 step= 150 loss=2.5633 policy=2.4972 value=0.0660
+  cycle=46 step= 175 loss=2.4844 policy=2.3892 value=0.0951
+cycle 46/99 done in 517.4s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 46609
+  cycle=47 step=   0 loss=2.5705 policy=2.4667 value=0.1039
+  cycle=47 step=  25 loss=2.5342 policy=2.4178 value=0.1164
+  cycle=47 step=  50 loss=2.5592 policy=2.4611 value=0.0981
+  cycle=47 step=  75 loss=2.4613 policy=2.3859 value=0.0754
+  cycle=47 step= 100 loss=2.7315 policy=2.5786 value=0.1530
+  cycle=47 step= 125 loss=2.4543 policy=2.3528 value=0.1015
+  cycle=47 step= 150 loss=2.4907 policy=2.4298 value=0.0609
+  cycle=47 step= 175 loss=2.4231 policy=2.3757 value=0.0474
+cycle 47/99 done in 551.4s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 47885
+  cycle=48 step=   0 loss=2.7671 policy=2.6452 value=0.1219
+  cycle=48 step=  25 loss=2.5564 policy=2.4681 value=0.0883
+  cycle=48 step=  50 loss=2.6818 policy=2.5633 value=0.1185
+  cycle=48 step=  75 loss=2.3835 policy=2.3386 value=0.0448
+  cycle=48 step= 100 loss=2.6482 policy=2.5939 value=0.0543
+  cycle=48 step= 125 loss=2.6330 policy=2.5227 value=0.1103
+  cycle=48 step= 150 loss=2.7814 policy=2.5858 value=0.1956
+  cycle=48 step= 175 loss=2.4240 policy=2.4170 value=0.0071
+cycle 48/99 done in 526.2s — winrate vs random = 0.93, winrate vs greedy = 0.50, buffer size = 49080
+  cycle=49 step=   0 loss=2.8198 policy=2.6282 value=0.1916
+  cycle=49 step=  25 loss=3.0092 policy=2.8512 value=0.1580
+  cycle=49 step=  50 loss=2.7442 policy=2.5986 value=0.1456
+  cycle=49 step=  75 loss=2.4742 policy=2.4474 value=0.0268
+  cycle=49 step= 100 loss=2.7311 policy=2.5952 value=0.1359
+  cycle=49 step= 125 loss=2.5617 policy=2.4683 value=0.0934
+  cycle=49 step= 150 loss=2.1817 policy=2.1496 value=0.0321
+  cycle=49 step= 175 loss=2.6752 policy=2.5687 value=0.1065
+cycle 49/99 done in 427.3s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 50035
+  cycle=50 step=   0 loss=2.5556 policy=2.4775 value=0.0781
+  cycle=50 step=  25 loss=2.6935 policy=2.4925 value=0.2009
+  cycle=50 step=  50 loss=2.4886 policy=2.4578 value=0.0308
+  cycle=50 step=  75 loss=2.4717 policy=2.4306 value=0.0411
+  cycle=50 step= 100 loss=2.5877 policy=2.5414 value=0.0463
+  cycle=50 step= 125 loss=2.3716 policy=2.2582 value=0.1134
+  cycle=50 step= 150 loss=2.5934 policy=2.4341 value=0.1592
+  cycle=50 step= 175 loss=2.3699 policy=2.3631 value=0.0068
+cycle 50/99 done in 488.2s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 51226
+  cycle=51 step=   0 loss=2.7403 policy=2.6861 value=0.0542
+  cycle=51 step=  25 loss=2.8729 policy=2.7071 value=0.1658
+  cycle=51 step=  50 loss=2.5074 policy=2.4577 value=0.0496
+  cycle=51 step=  75 loss=2.6465 policy=2.5311 value=0.1154
+  cycle=51 step= 100 loss=2.7176 policy=2.6953 value=0.0222
+  cycle=51 step= 125 loss=2.8590 policy=2.7229 value=0.1361
+  cycle=51 step= 150 loss=2.7833 policy=2.6596 value=0.1237
+  cycle=51 step= 175 loss=2.5525 policy=2.4501 value=0.1024
+cycle 51/99 done in 513.7s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 52394
+  cycle=52 step=   0 loss=2.7718 policy=2.5260 value=0.2458
+  cycle=52 step=  25 loss=2.6540 policy=2.4682 value=0.1858
+  cycle=52 step=  50 loss=2.7144 policy=2.6375 value=0.0769
+  cycle=52 step=  75 loss=2.6919 policy=2.6474 value=0.0445
+  cycle=52 step= 100 loss=2.5927 policy=2.5243 value=0.0684
+  cycle=52 step= 125 loss=2.5700 policy=2.4775 value=0.0925
+  cycle=52 step= 150 loss=2.4987 policy=2.4478 value=0.0509
+  cycle=52 step= 175 loss=2.5031 policy=2.4529 value=0.0502
+cycle 52/99 done in 467.9s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 53539
+  cycle=53 step=   0 loss=2.7337 policy=2.6464 value=0.0873
+  cycle=53 step=  25 loss=2.6709 policy=2.5614 value=0.1094
+  cycle=53 step=  50 loss=2.7000 policy=2.5739 value=0.1261
+  cycle=53 step=  75 loss=2.7796 policy=2.6834 value=0.0962
+  cycle=53 step= 100 loss=2.6162 policy=2.5607 value=0.0555
+  cycle=53 step= 125 loss=2.4858 policy=2.3779 value=0.1079
+  cycle=53 step= 150 loss=2.6949 policy=2.5770 value=0.1179
+  cycle=53 step= 175 loss=2.4431 policy=2.3882 value=0.0549
+cycle 53/99 done in 474.5s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 54626
+  cycle=54 step=   0 loss=2.6001 policy=2.5031 value=0.0970
+  cycle=54 step=  25 loss=2.7978 policy=2.7591 value=0.0387
+  cycle=54 step=  50 loss=2.5789 policy=2.4235 value=0.1554
+  cycle=54 step=  75 loss=2.6783 policy=2.6203 value=0.0580
+  cycle=54 step= 100 loss=2.4138 policy=2.3578 value=0.0560
+  cycle=54 step= 125 loss=2.4831 policy=2.4292 value=0.0539
+  cycle=54 step= 150 loss=2.3914 policy=2.3651 value=0.0263
+  cycle=54 step= 175 loss=2.4069 policy=2.3876 value=0.0193
+cycle 54/99 done in 564.6s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 55775
+  cycle=55 step=   0 loss=2.5824 policy=2.5644 value=0.0180
+  cycle=55 step=  25 loss=2.5800 policy=2.4858 value=0.0942
+  cycle=55 step=  50 loss=2.5809 policy=2.4425 value=0.1384
+  cycle=55 step=  75 loss=2.7777 policy=2.6490 value=0.1287
+  cycle=55 step= 100 loss=2.4011 policy=2.3921 value=0.0090
+  cycle=55 step= 125 loss=2.7315 policy=2.5624 value=0.1691
+  cycle=55 step= 150 loss=2.6511 policy=2.5576 value=0.0935
+  cycle=55 step= 175 loss=2.4519 policy=2.4032 value=0.0488
+cycle 55/99 done in 576.7s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 57081
+  cycle=56 step=   0 loss=2.5509 policy=2.4734 value=0.0774
+  cycle=56 step=  25 loss=2.6169 policy=2.4997 value=0.1172
+  cycle=56 step=  50 loss=2.5724 policy=2.5177 value=0.0547
+  cycle=56 step=  75 loss=2.5606 policy=2.5256 value=0.0349
+  cycle=56 step= 100 loss=2.6127 policy=2.5558 value=0.0568
+  cycle=56 step= 125 loss=2.4093 policy=2.3832 value=0.0262
+  cycle=56 step= 150 loss=2.7643 policy=2.6525 value=0.1118
+  cycle=56 step= 175 loss=2.5611 policy=2.3841 value=0.1770
+cycle 56/99 done in 464.0s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 58363
+  cycle=57 step=   0 loss=2.7325 policy=2.5488 value=0.1837
+  cycle=57 step=  25 loss=2.8389 policy=2.7179 value=0.1210
+  cycle=57 step=  50 loss=2.7977 policy=2.5847 value=0.2130
+  cycle=57 step=  75 loss=2.7057 policy=2.5015 value=0.2042
+  cycle=57 step= 100 loss=2.8009 policy=2.7490 value=0.0520
+  cycle=57 step= 125 loss=2.3524 policy=2.3313 value=0.0211
+  cycle=57 step= 150 loss=2.6801 policy=2.5766 value=0.1035
+  cycle=57 step= 175 loss=2.3347 policy=2.3037 value=0.0310
+cycle 57/99 done in 514.0s — winrate vs random = 0.83, winrate vs greedy = 1.00, buffer size = 59401
+  cycle=58 step=   0 loss=2.6022 policy=2.4656 value=0.1365
+  cycle=58 step=  25 loss=2.6956 policy=2.6303 value=0.0654
+  cycle=58 step=  50 loss=2.5145 policy=2.4780 value=0.0365
+  cycle=58 step=  75 loss=2.8504 policy=2.7377 value=0.1127
+  cycle=58 step= 100 loss=2.5742 policy=2.4985 value=0.0757
+  cycle=58 step= 125 loss=2.7300 policy=2.5688 value=0.1613
+  cycle=58 step= 150 loss=2.6570 policy=2.6494 value=0.0077
+  cycle=58 step= 175 loss=2.5377 policy=2.5124 value=0.0253
+cycle 58/99 done in 567.7s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 60441
+  cycle=59 step=   0 loss=2.7019 policy=2.5470 value=0.1549
+  cycle=59 step=  25 loss=2.8761 policy=2.6513 value=0.2248
+  cycle=59 step=  50 loss=2.5451 policy=2.4000 value=0.1450
+  cycle=59 step=  75 loss=2.7173 policy=2.6651 value=0.0521
+  cycle=59 step= 100 loss=2.6213 policy=2.5700 value=0.0512
+  cycle=59 step= 125 loss=2.3813 policy=2.3447 value=0.0366
+  cycle=59 step= 150 loss=2.2659 policy=2.2204 value=0.0455
+  cycle=59 step= 175 loss=2.7377 policy=2.6627 value=0.0750
+cycle 59/99 done in 482.7s — winrate vs random = 1.00, winrate vs greedy = 1.00, buffer size = 61685
+  cycle=60 step=   0 loss=2.4930 policy=2.4724 value=0.0205
+  cycle=60 step=  25 loss=2.3523 policy=2.3502 value=0.0021
+  cycle=60 step=  50 loss=2.8263 policy=2.7238 value=0.1026
+  cycle=60 step=  75 loss=2.5604 policy=2.5140 value=0.0464
+  cycle=60 step= 100 loss=2.5960 policy=2.5156 value=0.0804
+  cycle=60 step= 125 loss=2.6433 policy=2.5744 value=0.0688
+  cycle=60 step= 150 loss=2.6355 policy=2.5774 value=0.0581
+  cycle=60 step= 175 loss=2.4749 policy=2.4126 value=0.0623
+cycle 60/99 done in 395.2s — winrate vs random = 1.00, winrate vs greedy = 1.00, buffer size = 62976
+  cycle=61 step=   0 loss=2.5318 policy=2.4339 value=0.0979
+  cycle=61 step=  25 loss=2.5207 policy=2.4115 value=0.1092
+  cycle=61 step=  50 loss=2.5351 policy=2.4191 value=0.1160
+  cycle=61 step=  75 loss=2.6144 policy=2.5721 value=0.0423
+  cycle=61 step= 100 loss=2.5759 policy=2.4952 value=0.0807
+  cycle=61 step= 125 loss=2.5348 policy=2.5154 value=0.0194
+  cycle=61 step= 150 loss=2.3175 policy=2.3045 value=0.0130
+  cycle=61 step= 175 loss=2.5404 policy=2.4953 value=0.0451
+cycle 61/99 done in 505.6s — winrate vs random = 0.87, winrate vs greedy = 0.50, buffer size = 64075
+  cycle=62 step=   0 loss=2.5790 policy=2.5458 value=0.0331
+  cycle=62 step=  25 loss=2.6139 policy=2.4827 value=0.1312
+  cycle=62 step=  50 loss=2.7410 policy=2.5946 value=0.1464
+  cycle=62 step=  75 loss=2.6822 policy=2.6387 value=0.0434
+  cycle=62 step= 100 loss=2.5451 policy=2.4171 value=0.1280
+  cycle=62 step= 125 loss=2.8484 policy=2.7698 value=0.0786
+  cycle=62 step= 150 loss=2.5652 policy=2.4688 value=0.0965
+  cycle=62 step= 175 loss=2.5737 policy=2.4868 value=0.0869
+cycle 62/99 done in 460.6s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 65314
+  cycle=63 step=   0 loss=2.6742 policy=2.4993 value=0.1749
+  cycle=63 step=  25 loss=2.6827 policy=2.5847 value=0.0979
+  cycle=63 step=  50 loss=2.5159 policy=2.3600 value=0.1559
+  cycle=63 step=  75 loss=2.5553 policy=2.4813 value=0.0739
+  cycle=63 step= 100 loss=2.4727 policy=2.4254 value=0.0473
+  cycle=63 step= 125 loss=2.5619 policy=2.5231 value=0.0387
+  cycle=63 step= 150 loss=2.7240 policy=2.6573 value=0.0667
+  cycle=63 step= 175 loss=2.6260 policy=2.5434 value=0.0826
+cycle 63/99 done in 477.3s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 66502
+  cycle=64 step=   0 loss=2.5628 policy=2.4455 value=0.1173
+  cycle=64 step=  25 loss=2.6316 policy=2.5853 value=0.0463
+  cycle=64 step=  50 loss=2.6959 policy=2.5508 value=0.1451
+  cycle=64 step=  75 loss=2.6788 policy=2.5573 value=0.1215
+  cycle=64 step= 100 loss=2.6802 policy=2.5961 value=0.0841
+  cycle=64 step= 125 loss=2.3512 policy=2.3251 value=0.0261
+  cycle=64 step= 150 loss=2.6073 policy=2.4734 value=0.1339
+  cycle=64 step= 175 loss=2.6729 policy=2.6031 value=0.0699
+cycle 64/99 done in 523.5s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 67630
+  cycle=65 step=   0 loss=2.4439 policy=2.3998 value=0.0441
+  cycle=65 step=  25 loss=2.6172 policy=2.4029 value=0.2143
+  cycle=65 step=  50 loss=2.4751 policy=2.3600 value=0.1151
+  cycle=65 step=  75 loss=2.6237 policy=2.5623 value=0.0614
+  cycle=65 step= 100 loss=2.6500 policy=2.5451 value=0.1049
+  cycle=65 step= 125 loss=2.7144 policy=2.6976 value=0.0168
+  cycle=65 step= 150 loss=2.3810 policy=2.3502 value=0.0308
+  cycle=65 step= 175 loss=2.3386 policy=2.3293 value=0.0093
+cycle 65/99 done in 500.7s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 68765
+  cycle=66 step=   0 loss=2.4878 policy=2.4022 value=0.0856
+  cycle=66 step=  25 loss=2.6973 policy=2.3949 value=0.3024
+  cycle=66 step=  50 loss=2.4301 policy=2.3126 value=0.1175
+  cycle=66 step=  75 loss=2.5689 policy=2.4915 value=0.0774
+  cycle=66 step= 100 loss=2.9127 policy=2.8217 value=0.0910
+  cycle=66 step= 125 loss=2.6340 policy=2.4872 value=0.1468
+  cycle=66 step= 150 loss=2.9397 policy=2.7936 value=0.1460
+  cycle=66 step= 175 loss=2.7107 policy=2.5339 value=0.1768
+cycle 66/99 done in 625.4s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 69919
+  cycle=67 step=   0 loss=2.4183 policy=2.3879 value=0.0304
+  cycle=67 step=  25 loss=2.5616 policy=2.5366 value=0.0250
+  cycle=67 step=  50 loss=2.9335 policy=2.8077 value=0.1258
+  cycle=67 step=  75 loss=2.6428 policy=2.5372 value=0.1055
+  cycle=67 step= 100 loss=2.7060 policy=2.5558 value=0.1502
+  cycle=67 step= 125 loss=2.4535 policy=2.4520 value=0.0015
+  cycle=67 step= 150 loss=2.3498 policy=2.3359 value=0.0139
+  cycle=67 step= 175 loss=2.4381 policy=2.3988 value=0.0393
+cycle 67/99 done in 531.0s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 71286
+  cycle=68 step=   0 loss=2.7548 policy=2.6488 value=0.1060
+  cycle=68 step=  25 loss=2.7321 policy=2.6017 value=0.1304
+  cycle=68 step=  50 loss=2.6227 policy=2.5711 value=0.0515
+  cycle=68 step=  75 loss=2.6945 policy=2.5197 value=0.1748
+  cycle=68 step= 100 loss=2.5999 policy=2.4272 value=0.1727
+  cycle=68 step= 125 loss=2.7028 policy=2.5845 value=0.1183
+  cycle=68 step= 150 loss=2.6835 policy=2.6207 value=0.0628
+  cycle=68 step= 175 loss=2.7702 policy=2.6796 value=0.0905
+cycle 68/99 done in 540.7s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 72374
+  cycle=69 step=   0 loss=2.5402 policy=2.4438 value=0.0965
+  cycle=69 step=  25 loss=2.6017 policy=2.5075 value=0.0942
+  cycle=69 step=  50 loss=2.4619 policy=2.3760 value=0.0858
+  cycle=69 step=  75 loss=2.5759 policy=2.5085 value=0.0674
+  cycle=69 step= 100 loss=2.5908 policy=2.5158 value=0.0751
+  cycle=69 step= 125 loss=2.4505 policy=2.4446 value=0.0059
+  cycle=69 step= 150 loss=2.7532 policy=2.6112 value=0.1419
+  cycle=69 step= 175 loss=2.7356 policy=2.6294 value=0.1062
+cycle 69/99 done in 444.5s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 73533
+  cycle=70 step=   0 loss=2.6520 policy=2.4871 value=0.1649
+  cycle=70 step=  25 loss=2.2636 policy=2.1383 value=0.1252
+  cycle=70 step=  50 loss=2.4679 policy=2.4172 value=0.0507
+  cycle=70 step=  75 loss=2.6562 policy=2.6554 value=0.0008
+  cycle=70 step= 100 loss=2.6459 policy=2.5960 value=0.0499
+  cycle=70 step= 125 loss=2.8859 policy=2.6870 value=0.1989
+  cycle=70 step= 150 loss=2.8276 policy=2.7542 value=0.0734
+  cycle=70 step= 175 loss=2.5938 policy=2.5757 value=0.0182
+cycle 70/99 done in 591.8s — winrate vs random = 1.00, winrate vs greedy = 0.00, buffer size = 74693
+  cycle=71 step=   0 loss=2.8477 policy=2.6637 value=0.1840
+  cycle=71 step=  25 loss=2.7503 policy=2.7270 value=0.0233
+  cycle=71 step=  50 loss=2.6885 policy=2.6060 value=0.0825
+  cycle=71 step=  75 loss=2.7469 policy=2.7047 value=0.0422
+  cycle=71 step= 100 loss=2.4912 policy=2.4225 value=0.0687
+  cycle=71 step= 125 loss=2.6628 policy=2.5578 value=0.1051
+  cycle=71 step= 150 loss=2.6763 policy=2.6180 value=0.0583
+  cycle=71 step= 175 loss=2.5182 policy=2.4986 value=0.0196
+cycle 71/99 done in 570.1s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 75688
+  cycle=72 step=   0 loss=2.7503 policy=2.6334 value=0.1169
+  cycle=72 step=  25 loss=2.5724 policy=2.4893 value=0.0831
+  cycle=72 step=  50 loss=2.6274 policy=2.5085 value=0.1189
+  cycle=72 step=  75 loss=2.6970 policy=2.5929 value=0.1042
+  cycle=72 step= 100 loss=2.5235 policy=2.5118 value=0.0117
+  cycle=72 step= 125 loss=2.3718 policy=2.3549 value=0.0168
+  cycle=72 step= 150 loss=2.6997 policy=2.5972 value=0.1024
+  cycle=72 step= 175 loss=2.4921 policy=2.4442 value=0.0478
+cycle 72/99 done in 551.3s — winrate vs random = 0.93, winrate vs greedy = 0.50, buffer size = 76811
+  cycle=73 step=   0 loss=2.5504 policy=2.4788 value=0.0716
+  cycle=73 step=  25 loss=2.3884 policy=2.3525 value=0.0359
+  cycle=73 step=  50 loss=2.6139 policy=2.5102 value=0.1037
+  cycle=73 step=  75 loss=2.4671 policy=2.3860 value=0.0811
+  cycle=73 step= 100 loss=2.3403 policy=2.3134 value=0.0269
+  cycle=73 step= 125 loss=2.6833 policy=2.6702 value=0.0130
+  cycle=73 step= 150 loss=2.6172 policy=2.5219 value=0.0952
+  cycle=73 step= 175 loss=2.5191 policy=2.4651 value=0.0540
+cycle 73/99 done in 522.4s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 77993
+  cycle=74 step=   0 loss=2.5156 policy=2.4012 value=0.1145
+  cycle=74 step=  25 loss=2.5648 policy=2.5549 value=0.0099
+  cycle=74 step=  50 loss=2.5272 policy=2.4625 value=0.0647
+  cycle=74 step=  75 loss=2.5645 policy=2.4872 value=0.0773
+  cycle=74 step= 100 loss=2.4794 policy=2.3769 value=0.1026
+  cycle=74 step= 125 loss=2.5327 policy=2.5259 value=0.0068
+  cycle=74 step= 150 loss=2.5130 policy=2.4207 value=0.0922
+  cycle=74 step= 175 loss=2.5796 policy=2.4867 value=0.0929
+cycle 74/99 done in 561.5s — winrate vs random = 1.00, winrate vs greedy = 1.00, buffer size = 79132
+  cycle=75 step=   0 loss=2.8667 policy=2.7501 value=0.1167
+  cycle=75 step=  25 loss=2.4097 policy=2.3603 value=0.0493
+  cycle=75 step=  50 loss=2.4034 policy=2.2882 value=0.1152
+  cycle=75 step=  75 loss=2.6654 policy=2.5225 value=0.1429
+  cycle=75 step= 100 loss=2.4441 policy=2.4361 value=0.0080
+  cycle=75 step= 125 loss=2.6333 policy=2.5228 value=0.1104
+  cycle=75 step= 150 loss=2.7247 policy=2.6341 value=0.0906
+  cycle=75 step= 175 loss=2.5593 policy=2.4016 value=0.1577
+cycle 75/99 done in 576.2s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 80277
+  cycle=76 step=   0 loss=2.5049 policy=2.4908 value=0.0141
+  cycle=76 step=  25 loss=2.9917 policy=2.7783 value=0.2135
+  cycle=76 step=  50 loss=2.5036 policy=2.4401 value=0.0635
+  cycle=76 step=  75 loss=2.6572 policy=2.5972 value=0.0599
+  cycle=76 step= 100 loss=2.6524 policy=2.5230 value=0.1294
+  cycle=76 step= 125 loss=2.4653 policy=2.4181 value=0.0473
+  cycle=76 step= 150 loss=2.7748 policy=2.6755 value=0.0993
+  cycle=76 step= 175 loss=2.4273 policy=2.4176 value=0.0097
+cycle 76/99 done in 586.4s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 81617
+  cycle=77 step=   0 loss=2.6073 policy=2.5217 value=0.0857
+  cycle=77 step=  25 loss=3.0587 policy=2.8983 value=0.1604
+  cycle=77 step=  50 loss=2.5240 policy=2.3353 value=0.1886
+  cycle=77 step=  75 loss=2.4807 policy=2.3867 value=0.0940
+  cycle=77 step= 100 loss=2.5587 policy=2.4764 value=0.0823
+  cycle=77 step= 125 loss=2.5662 policy=2.4552 value=0.1110
+  cycle=77 step= 150 loss=2.6128 policy=2.5028 value=0.1100
+  cycle=77 step= 175 loss=2.7359 policy=2.5342 value=0.2017
+cycle 77/99 done in 515.3s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 82646
+  cycle=78 step=   0 loss=2.6881 policy=2.5482 value=0.1399
+  cycle=78 step=  25 loss=2.7108 policy=2.6575 value=0.0534
+  cycle=78 step=  50 loss=2.5301 policy=2.4573 value=0.0728
+  cycle=78 step=  75 loss=2.5892 policy=2.5076 value=0.0816
+  cycle=78 step= 100 loss=2.6186 policy=2.5192 value=0.0994
+  cycle=78 step= 125 loss=2.3922 policy=2.3425 value=0.0496
+  cycle=78 step= 150 loss=2.7752 policy=2.6599 value=0.1153
+  cycle=78 step= 175 loss=2.6920 policy=2.5661 value=0.1258
+cycle 78/99 done in 509.0s — winrate vs random = 0.97, winrate vs greedy = 0.50, buffer size = 83774
+  cycle=79 step=   0 loss=2.7452 policy=2.6754 value=0.0698
+  cycle=79 step=  25 loss=2.7079 policy=2.6149 value=0.0930
+  cycle=79 step=  50 loss=2.7633 policy=2.6312 value=0.1321
+  cycle=79 step=  75 loss=2.7208 policy=2.5255 value=0.1953
+  cycle=79 step= 100 loss=2.4097 policy=2.3738 value=0.0359
+  cycle=79 step= 125 loss=2.6724 policy=2.6159 value=0.0565
+  cycle=79 step= 150 loss=2.6032 policy=2.4481 value=0.1551
+  cycle=79 step= 175 loss=2.7560 policy=2.5745 value=0.1814
+cycle 79/99 done in 506.0s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 84794
+  cycle=80 step=   0 loss=2.4840 policy=2.4387 value=0.0453
+  cycle=80 step=  25 loss=2.4932 policy=2.4482 value=0.0450
+  cycle=80 step=  50 loss=2.8463 policy=2.7116 value=0.1347
+  cycle=80 step=  75 loss=2.6651 policy=2.6272 value=0.0379
+  cycle=80 step= 100 loss=2.4966 policy=2.4059 value=0.0907
+  cycle=80 step= 125 loss=2.7437 policy=2.5515 value=0.1922
+  cycle=80 step= 150 loss=2.4586 policy=2.2880 value=0.1707
+  cycle=80 step= 175 loss=2.6331 policy=2.5136 value=0.1195
+cycle 80/99 done in 554.7s — winrate vs random = 0.97, winrate vs greedy = 0.50, buffer size = 86042
+  cycle=81 step=   0 loss=2.5947 policy=2.3637 value=0.2310
+  cycle=81 step=  25 loss=2.9102 policy=2.7171 value=0.1931
+  cycle=81 step=  50 loss=2.3408 policy=2.3181 value=0.0227
+  cycle=81 step=  75 loss=2.5534 policy=2.4516 value=0.1019
+  cycle=81 step= 100 loss=2.2919 policy=2.2884 value=0.0034
+  cycle=81 step= 125 loss=2.4285 policy=2.3909 value=0.0376
+  cycle=81 step= 150 loss=2.6301 policy=2.5564 value=0.0736
+  cycle=81 step= 175 loss=2.5030 policy=2.4625 value=0.0405
+cycle 81/99 done in 595.3s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 87134
+  cycle=82 step=   0 loss=2.6750 policy=2.6395 value=0.0355
+  cycle=82 step=  25 loss=2.5049 policy=2.4294 value=0.0755
+  cycle=82 step=  50 loss=2.4472 policy=2.3760 value=0.0713
+  cycle=82 step=  75 loss=2.7194 policy=2.5498 value=0.1696
+  cycle=82 step= 100 loss=2.6522 policy=2.5993 value=0.0530
+  cycle=82 step= 125 loss=2.6183 policy=2.4449 value=0.1734
+  cycle=82 step= 150 loss=2.6024 policy=2.5419 value=0.0605
+  cycle=82 step= 175 loss=2.5005 policy=2.3051 value=0.1953
+cycle 82/99 done in 501.6s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 88224
+  cycle=83 step=   0 loss=2.7906 policy=2.6453 value=0.1454
+  cycle=83 step=  25 loss=2.2371 policy=2.2164 value=0.0207
+  cycle=83 step=  50 loss=2.5494 policy=2.4064 value=0.1430
+  cycle=83 step=  75 loss=2.7232 policy=2.5739 value=0.1493
+  cycle=83 step= 100 loss=2.8580 policy=2.7307 value=0.1273
+  cycle=83 step= 125 loss=2.6533 policy=2.5886 value=0.0647
+  cycle=83 step= 150 loss=2.5912 policy=2.5708 value=0.0204
+  cycle=83 step= 175 loss=2.6938 policy=2.6163 value=0.0775
+cycle 83/99 done in 594.6s — winrate vs random = 0.97, winrate vs greedy = 0.50, buffer size = 89219
+  cycle=84 step=   0 loss=2.4150 policy=2.2613 value=0.1537
+  cycle=84 step=  25 loss=2.9316 policy=2.7312 value=0.2004
+  cycle=84 step=  50 loss=2.5404 policy=2.4588 value=0.0817
+  cycle=84 step=  75 loss=2.6062 policy=2.5225 value=0.0837
+  cycle=84 step= 100 loss=2.5118 policy=2.4858 value=0.0260
+  cycle=84 step= 125 loss=2.4475 policy=2.4306 value=0.0170
+  cycle=84 step= 150 loss=2.5452 policy=2.4282 value=0.1170
+  cycle=84 step= 175 loss=2.5717 policy=2.4407 value=0.1311
+cycle 84/99 done in 546.2s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 90374
+  cycle=85 step=   0 loss=2.6854 policy=2.4795 value=0.2059
+  cycle=85 step=  25 loss=2.6626 policy=2.5477 value=0.1150
+  cycle=85 step=  50 loss=2.8890 policy=2.7711 value=0.1179
+  cycle=85 step=  75 loss=2.6322 policy=2.5777 value=0.0545
+  cycle=85 step= 100 loss=2.6188 policy=2.5465 value=0.0723
+  cycle=85 step= 125 loss=2.5697 policy=2.5084 value=0.0613
+  cycle=85 step= 150 loss=2.8209 policy=2.7970 value=0.0239
+  cycle=85 step= 175 loss=2.9638 policy=2.7961 value=0.1677
+cycle 85/99 done in 509.6s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 91426
+  cycle=86 step=   0 loss=2.7684 policy=2.5896 value=0.1787
+  cycle=86 step=  25 loss=2.6435 policy=2.5393 value=0.1042
+  cycle=86 step=  50 loss=2.5861 policy=2.4691 value=0.1170
+  cycle=86 step=  75 loss=2.7167 policy=2.6473 value=0.0694
+  cycle=86 step= 100 loss=2.6749 policy=2.6050 value=0.0699
+  cycle=86 step= 125 loss=2.6406 policy=2.6082 value=0.0324
+  cycle=86 step= 150 loss=2.7732 policy=2.7070 value=0.0662
+  cycle=86 step= 175 loss=2.4967 policy=2.4280 value=0.0688
+cycle 86/99 done in 496.5s — winrate vs random = 1.00, winrate vs greedy = 1.00, buffer size = 92597
+  cycle=87 step=   0 loss=2.7613 policy=2.5727 value=0.1886
+  cycle=87 step=  25 loss=2.8636 policy=2.6689 value=0.1948
+  cycle=87 step=  50 loss=2.6997 policy=2.5455 value=0.1542
+  cycle=87 step=  75 loss=2.6651 policy=2.5389 value=0.1263
+  cycle=87 step= 100 loss=2.5229 policy=2.4643 value=0.0585
+  cycle=87 step= 125 loss=2.5528 policy=2.4257 value=0.1271
+  cycle=87 step= 150 loss=2.5401 policy=2.4764 value=0.0637
+  cycle=87 step= 175 loss=2.5686 policy=2.5175 value=0.0512
+cycle 87/99 done in 508.7s — winrate vs random = 1.00, winrate vs greedy = 1.00, buffer size = 93650
+  cycle=88 step=   0 loss=2.4703 policy=2.4484 value=0.0219
+  cycle=88 step=  25 loss=2.4978 policy=2.3302 value=0.1676
+  cycle=88 step=  50 loss=2.8644 policy=2.7067 value=0.1577
+  cycle=88 step=  75 loss=2.4820 policy=2.3400 value=0.1420
+  cycle=88 step= 100 loss=2.5077 policy=2.4166 value=0.0911
+  cycle=88 step= 125 loss=2.7717 policy=2.6313 value=0.1404
+  cycle=88 step= 150 loss=2.6002 policy=2.4903 value=0.1100
+  cycle=88 step= 175 loss=2.6703 policy=2.5918 value=0.0785
+cycle 88/99 done in 567.2s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 94790
+  cycle=89 step=   0 loss=2.6103 policy=2.5314 value=0.0789
+  cycle=89 step=  25 loss=2.9515 policy=2.8169 value=0.1347
+  cycle=89 step=  50 loss=2.6122 policy=2.5461 value=0.0661
+  cycle=89 step=  75 loss=2.7863 policy=2.7325 value=0.0538
+  cycle=89 step= 100 loss=2.5152 policy=2.4567 value=0.0586
+  cycle=89 step= 125 loss=2.5473 policy=2.5078 value=0.0395
+  cycle=89 step= 150 loss=2.5598 policy=2.4176 value=0.1422
+  cycle=89 step= 175 loss=2.6134 policy=2.6108 value=0.0026
+cycle 89/99 done in 687.9s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 96041
+  cycle=90 step=   0 loss=2.6659 policy=2.5635 value=0.1024
+  cycle=90 step=  25 loss=2.5527 policy=2.5012 value=0.0515
+  cycle=90 step=  50 loss=2.7950 policy=2.7688 value=0.0263
+  cycle=90 step=  75 loss=2.3811 policy=2.3700 value=0.0111
+  cycle=90 step= 100 loss=2.4266 policy=2.3920 value=0.0346
+  cycle=90 step= 125 loss=2.6965 policy=2.6269 value=0.0696
+  cycle=90 step= 150 loss=2.6929 policy=2.6246 value=0.0683
+  cycle=90 step= 175 loss=2.6489 policy=2.4495 value=0.1994
+cycle 90/99 done in 716.2s — winrate vs random = 0.97, winrate vs greedy = 1.00, buffer size = 97228
+  cycle=91 step=   0 loss=2.5276 policy=2.4111 value=0.1165
+  cycle=91 step=  25 loss=2.6499 policy=2.4842 value=0.1657
+  cycle=91 step=  50 loss=2.4934 policy=2.3692 value=0.1242
+  cycle=91 step=  75 loss=2.4124 policy=2.3620 value=0.0504
+  cycle=91 step= 100 loss=2.6048 policy=2.4962 value=0.1087
+  cycle=91 step= 125 loss=2.7206 policy=2.5964 value=0.1242
+  cycle=91 step= 150 loss=2.7166 policy=2.6280 value=0.0886
+  cycle=91 step= 175 loss=2.6062 policy=2.5654 value=0.0408
+cycle 91/99 done in 739.8s — winrate vs random = 1.00, winrate vs greedy = 1.00, buffer size = 98291
+  cycle=92 step=   0 loss=2.3472 policy=2.3122 value=0.0351
+  cycle=92 step=  25 loss=2.6659 policy=2.5383 value=0.1277
+  cycle=92 step=  50 loss=2.6195 policy=2.5060 value=0.1134
+  cycle=92 step=  75 loss=2.8573 policy=2.7655 value=0.0918
+  cycle=92 step= 100 loss=2.3277 policy=2.2921 value=0.0356
+  cycle=92 step= 125 loss=2.7597 policy=2.6708 value=0.0889
+  cycle=92 step= 150 loss=2.7566 policy=2.6987 value=0.0579
+  cycle=92 step= 175 loss=2.5730 policy=2.4848 value=0.0883
+cycle 92/99 done in 630.1s — winrate vs random = 0.87, winrate vs greedy = 1.00, buffer size = 99457
+  cycle=93 step=   0 loss=2.5858 policy=2.5278 value=0.0580
+  cycle=93 step=  25 loss=2.6157 policy=2.5420 value=0.0738
+  cycle=93 step=  50 loss=2.4096 policy=2.3201 value=0.0895
+  cycle=93 step=  75 loss=2.7263 policy=2.5882 value=0.1381
+  cycle=93 step= 100 loss=2.9932 policy=2.8657 value=0.1275
+  cycle=93 step= 125 loss=2.4057 policy=2.3572 value=0.0485
+  cycle=93 step= 150 loss=2.7615 policy=2.7187 value=0.0428
+  cycle=93 step= 175 loss=2.9208 policy=2.7763 value=0.1445
+cycle 93/99 done in 755.0s — winrate vs random = 1.00, winrate vs greedy = 0.50, buffer size = 100602
+  cycle=94 step=   0 loss=2.5779 policy=2.5073 value=0.0706
+  cycle=94 step=  25 loss=2.6050 policy=2.4882 value=0.1168
+  cycle=94 step=  50 loss=2.7918 policy=2.7592 value=0.0326
+  cycle=94 step=  75 loss=2.4165 policy=2.3230 value=0.0935
+  cycle=94 step= 100 loss=2.5140 policy=2.5020 value=0.0119
+  cycle=94 step= 125 loss=2.7391 policy=2.6126 value=0.1265
+  cycle=94 step= 150 loss=2.5376 policy=2.4622 value=0.0754
+  cycle=94 step= 175 loss=2.5396 policy=2.4364 value=0.1031
+cycle 94/99 done in 700.1s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 101910
+  cycle=95 step=   0 loss=2.6759 policy=2.5823 value=0.0937
+  cycle=95 step=  25 loss=2.7894 policy=2.6711 value=0.1182
+  cycle=95 step=  50 loss=2.6962 policy=2.5994 value=0.0968
+  cycle=95 step=  75 loss=2.8577 policy=2.6950 value=0.1626
+  cycle=95 step= 100 loss=2.7776 policy=2.6815 value=0.0961
+  cycle=95 step= 125 loss=2.3388 policy=2.3332 value=0.0056
+  cycle=95 step= 150 loss=2.6371 policy=2.6025 value=0.0346
+  cycle=95 step= 175 loss=2.7614 policy=2.6772 value=0.0842
+cycle 95/99 done in 654.0s — winrate vs random = 0.97, winrate vs greedy = 0.50, buffer size = 103014
+  cycle=96 step=   0 loss=2.6743 policy=2.5714 value=0.1029
+  cycle=96 step=  25 loss=2.7127 policy=2.5796 value=0.1331
+  cycle=96 step=  50 loss=2.3187 policy=2.2617 value=0.0569
+  cycle=96 step=  75 loss=2.7212 policy=2.6357 value=0.0854
+  cycle=96 step= 100 loss=2.6247 policy=2.4880 value=0.1367
+  cycle=96 step= 125 loss=2.6756 policy=2.5912 value=0.0844
+  cycle=96 step= 150 loss=2.6842 policy=2.5146 value=0.1696
+  cycle=96 step= 175 loss=2.5700 policy=2.4991 value=0.0709
+cycle 96/99 done in 645.1s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 104387
+  cycle=97 step=   0 loss=2.7710 policy=2.6886 value=0.0824
+  cycle=97 step=  25 loss=2.6649 policy=2.5940 value=0.0709
+  cycle=97 step=  50 loss=2.6379 policy=2.6096 value=0.0283
+  cycle=97 step=  75 loss=2.6815 policy=2.6001 value=0.0814
+  cycle=97 step= 100 loss=2.5744 policy=2.5236 value=0.0508
+  cycle=97 step= 125 loss=2.6090 policy=2.5513 value=0.0578
+  cycle=97 step= 150 loss=2.8629 policy=2.7868 value=0.0761
+  cycle=97 step= 175 loss=2.5574 policy=2.4614 value=0.0959
+cycle 97/99 done in 696.0s — winrate vs random = 0.90, winrate vs greedy = 1.00, buffer size = 105618
+  cycle=98 step=   0 loss=2.5190 policy=2.5127 value=0.0063
+  cycle=98 step=  25 loss=2.7831 policy=2.6905 value=0.0926
+  cycle=98 step=  50 loss=2.6321 policy=2.5831 value=0.0490
+  cycle=98 step=  75 loss=2.5305 policy=2.4047 value=0.1258
+  cycle=98 step= 100 loss=2.3830 policy=2.3673 value=0.0157
+  cycle=98 step= 125 loss=2.4365 policy=2.3895 value=0.0470
+  cycle=98 step= 150 loss=2.7488 policy=2.5414 value=0.2074
+  cycle=98 step= 175 loss=2.6435 policy=2.5267 value=0.1168
+cycle 98/99 done in 714.9s — winrate vs random = 1.00, winrate vs greedy = 0.50, buffer size = 106769
+  cycle=99 step=   0 loss=2.6286 policy=2.5452 value=0.0834
+  cycle=99 step=  25 loss=2.5846 policy=2.4724 value=0.1122
+  cycle=99 step=  50 loss=2.5929 policy=2.5404 value=0.0524
+  cycle=99 step=  75 loss=3.0242 policy=2.8045 value=0.2197
+  cycle=99 step= 100 loss=2.5190 policy=2.4934 value=0.0257
+  cycle=99 step= 125 loss=2.9871 policy=2.9192 value=0.0679
+  cycle=99 step= 150 loss=2.8340 policy=2.7616 value=0.0724
+  cycle=99 step= 175 loss=2.7114 policy=2.6166 value=0.0947
+cycle 99/99 done in 690.9s — winrate vs random = 0.93, winrate vs greedy = 1.00, buffer size = 108005
+
+Final winrate vs random: 0.933
+Final loss:              2.4653

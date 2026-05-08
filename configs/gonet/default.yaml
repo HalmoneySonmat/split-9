@@ -1,0 +1,9 @@
+# Full GoNet (ADR-009 / ADR-010) — Phase 1.3b serious training, ~2.5M params.
+
+_target_: split_brain_go.gonet.network.GoNetConfig
+input_channels: 8
+n_blocks: 6
+channels: 128
+value_hidden: 64
+board_size: 9
+n_actions: 82

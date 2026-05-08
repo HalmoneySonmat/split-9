@@ -1,0 +1,43 @@
+# Phase 1.3a PoC self-play training configuration.
+# Tweak any field; flat mapping to TrainConfig dataclass.
+
+seed: 42
+
+# Model — small for PoC, grows to (6, 128) in Phase 1.3b.
+n_blocks: 4
+channels: 64
+
+# Outer schedule (5 cycles × 10 games × 100 steps ≈ 30 min – 2 h on RTX 3070 Ti)
+n_cycles: 5
+games_per_cycle: 10
+train_steps_per_cycle: 100
+
+# Self-play
+n_simulations: 100
+c_puct: 1.5
+dirichlet_alpha: 0.25
+dirichlet_weight: 0.25
+max_moves: 200
+
+# Batched mode: 8 games concurrent on one GPU. ~4-6x speedup on RTX 3070 Ti.
+use_batched: true
+batch_n_games: 8
+
+# Optimization
+batch_size: 32
+lr: 0.001
+weight_decay: 0.0001
+grad_clip: 1.0
+
+# Buffer
+buffer_capacity: 50000
+min_buffer: 256
+
+# Eval
+eval_n_games: 20
+eval_n_simulations: 50
+eval_max_moves: 200
+
+# IO
+checkpoint_dir: runs/checkpoints
+log_every: 10
