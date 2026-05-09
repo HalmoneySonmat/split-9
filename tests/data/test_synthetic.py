@@ -18,6 +18,7 @@ from split_brain_go.data.synthetic import (
     synthesize,
 )
 from split_brain_go.env.go_env import PASS_ACTION, GoEnv
+from split_brain_go.gonet.mcts import PrincipalVariation
 
 
 # ---------------------------------------------------------- helpers
@@ -216,3 +217,88 @@ def test_synthesize_returns_signal_and_text():
     )
     assert isinstance(sig, GameSignal)
     assert isinstance(text, str) and len(text) > 30
+
+
+# ---------------------------------------------------------- PV templates
+
+
+def _make_pv(first_action: int, first_mover: int, value: float) -> PrincipalVariation:
+    return PrincipalVariation(
+        moves=[(first_action, first_mover), (20, 1 - first_mover), (50, first_mover)],
+        visit_count=42,
+        value=value,
+    )
+
+
+def test_signal_carries_principal_variations():
+    pvs = [_make_pv(40, 0, 0.30), _make_pv(20, 0, 0.05)]
+    env = GoEnv()
+    env.reset()
+    after = _step(env, 40)
+    sig = extract_signal(
+        env, 40, after, _zero_logits(),
+        value=0.1, value_after=0.2,
+        principal_variations=pvs,
+    )
+    assert len(sig.principal_variations) == 2
+    assert sig.principal_variations[0].value == pytest.approx(0.30)
+
+
+def test_pv_templates_render_lines():
+    """PV-based templates must mention move coordinates from the PV."""
+    pvs = [_make_pv(40, 0, 0.30), _make_pv(20, 0, 0.05), _make_pv(60, 0, -0.15)]
+    sig = GameSignal(
+        move_number=10,
+        is_pass=False,
+        selected_action=40,
+        selected_pos=(4, 4),
+        selected_confidence=0.55,
+        top_alternatives=[],
+        value_before=0.1,
+        value_after=0.4,
+        value_delta=0.3,
+        captures=0,
+        game_phase="middlegame",
+        mover=0,
+        principal_variations=pvs,
+    )
+    rng = np.random.default_rng(0)
+    seen_with_pv_marker = 0
+    for _ in range(40):
+        text = render_explanation(sig, rng)
+        # At least some draws should hit a PV-based template, which
+        # mentions "val +0.30" or similar from one of the PVs.
+        if "val +0.30" in text or "val +0.05" in text or "val -0.15" in text:
+            seen_with_pv_marker += 1
+    assert seen_with_pv_marker > 0, (
+        "No PV-based template fired across 40 draws — template list broken"
+    )
+
+
+def test_pv_template_handles_no_pvs_gracefully():
+    """If no PVs given, PV templates fall back to non-PV templates."""
+    sig = GameSignal(
+        move_number=5,
+        is_pass=False,
+        selected_action=40,
+        selected_pos=(4, 4),
+        selected_confidence=0.45,
+        top_alternatives=[],
+        value_before=0.1,
+        value_after=0.2,
+        value_delta=0.1,
+        captures=0,
+        game_phase="opening",
+        mover=0,
+        principal_variations=[],
+    )
+    rng = np.random.default_rng(0)
+    for _ in range(20):
+        text = render_explanation(sig, rng)
+        # No template should crash; text always non-empty
+        assert isinstance(text, str) and len(text) > 0
+
+
+def test_six_templates_registered():
+    from split_brain_go.data.synthetic import _TEMPLATES
+    assert len(_TEMPLATES) == 6

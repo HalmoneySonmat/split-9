@@ -168,4 +168,87 @@ class PerceiverResampler(nn.Module):
         return sum(p.numel() for p in self.parameters())
 
 
-__all__ = ["PerceiverResampler", "PerceiverBlock"]
+# ============================================================ asymmetric
+
+
+class AsymmetricPerceiverResampler(nn.Module):
+    """Per-layer-token-budget Perceiver Resampler.
+
+    Differs from ``PerceiverResampler`` in one essential way: each Go-Net
+    activation layer gets its *own* learned latent pool with a configurable
+    token count. Outputs are concatenated along the sequence dim.
+
+    Use case: when we want *more* of the LLM's attention-bandwidth to be
+    spent on high-level Go-Net activations and *less* on low-level. Set
+    ``layer_token_counts = {3: 8, 4: 12, 5: 16}`` to bias toward layer 5.
+
+    Args:
+        layer_token_counts: ``{layer_id: n_tokens}``. Must have the same
+            keys as ``layer_channels``.
+        layer_channels: ``{layer_id: channel_count}``.
+        spatial_size, d_model, n_heads, n_blocks: forwarded to each
+            internal ``PerceiverResampler``.
+    """
+
+    def __init__(
+        self,
+        layer_token_counts: dict[int, int],
+        layer_channels: dict[int, int],
+        spatial_size: int = 9,
+        d_model: int = 2048,
+        n_heads: int = 8,
+        n_blocks: int = 2,
+    ) -> None:
+        super().__init__()
+        if set(layer_token_counts.keys()) != set(layer_channels.keys()):
+            raise ValueError(
+                f"layer_token_counts keys {sorted(layer_token_counts.keys())} "
+                f"!= layer_channels keys {sorted(layer_channels.keys())}"
+            )
+        if not layer_token_counts:
+            raise ValueError("layer_token_counts must be non-empty")
+        if any(n <= 0 for n in layer_token_counts.values()):
+            raise ValueError("Per-layer token counts must be positive")
+
+        self.layer_ids = sorted(layer_token_counts.keys())
+        self.layer_token_counts = dict(layer_token_counts)
+        self.spatial_size = spatial_size
+        self.d_model = d_model
+        self.total_tokens = sum(layer_token_counts.values())
+
+        # One independent resampler per layer.
+        self.per_layer = nn.ModuleDict(
+            {
+                str(lid): PerceiverResampler(
+                    layer_channels={lid: layer_channels[lid]},
+                    spatial_size=spatial_size,
+                    n_latents=layer_token_counts[lid],
+                    d_model=d_model,
+                    n_heads=n_heads,
+                    n_blocks=n_blocks,
+                )
+                for lid in self.layer_ids
+            }
+        )
+
+    def forward(self, acts: dict[int, Tensor]) -> Tensor:
+        if set(acts.keys()) != set(self.layer_ids):
+            raise KeyError(
+                f"acts keys {sorted(acts.keys())} != expected {self.layer_ids}"
+            )
+        outputs = []
+        for lid in self.layer_ids:
+            sub = {lid: acts[lid]}
+            tokens = self.per_layer[str(lid)](sub)
+            outputs.append(tokens)
+        return torch.cat(outputs, dim=1)
+
+    def num_parameters(self) -> int:
+        return sum(p.numel() for p in self.parameters())
+
+
+__all__ = [
+    "PerceiverResampler",
+    "PerceiverBlock",
+    "AsymmetricPerceiverResampler",
+]

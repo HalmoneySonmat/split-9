@@ -44,6 +44,25 @@ N_ACTIONS = 82
 PASS_ACTION = 81
 
 
+@dataclass
+class PrincipalVariation:
+    """One main line from the MCTS tree.
+
+    Attributes:
+        moves: List of ``(action, mover)`` tuples, in play order.
+            ``mover`` is 0 (Black) or 1 (White) — who played each move.
+        visit_count: Visits at the *root* for this line's first move.
+            Higher = MCTS preferred this line.
+        value: Estimated game value at the PV's leaf, *from the root's
+            current player's perspective*. Positive = good for root
+            player; negative = bad.
+    """
+
+    moves: list[tuple[int, int]]
+    visit_count: int
+    value: float
+
+
 # ====================================================================== Node
 
 
@@ -123,16 +142,40 @@ class MCTS:
         """Run ``n_simulations`` from a copy of ``env``.
 
         Returns an ``(82,)`` array of *visit-count proportions* over actions.
-        Sums to 1 (or to 0 if no simulations reached any child — corner case
-        of immediate terminal).
         """
+        root = self._search_internal(env, add_root_noise, rng)
+        return self._visit_distribution(root)
+
+    def search_with_pvs(
+        self,
+        env: GoEnv,
+        k: int = 3,
+        max_depth: int = 5,
+        add_root_noise: bool = True,
+        rng: np.random.Generator | None = None,
+    ) -> tuple[np.ndarray, list["PrincipalVariation"]]:
+        """Run search, return ``(visit_dist, top_k_principal_variations)``.
+
+        Each principal variation is a greedy walk of most-visited children
+        from one of the top-K root actions, up to ``max_depth`` plies.
+        """
+        root = self._search_internal(env, add_root_noise, rng)
+        dist = self._visit_distribution(root)
+        pvs = self._extract_top_k_pvs(root, k=k, max_depth=max_depth)
+        return dist, pvs
+
+    def _search_internal(
+        self,
+        env: GoEnv,
+        add_root_noise: bool,
+        rng: np.random.Generator | None,
+    ) -> Node:
+        """Common search core. Returns the populated root node."""
         if env.is_terminal():
             raise ValueError("Cannot run MCTS on a terminal state")
         rng = rng if rng is not None else np.random.default_rng()
 
         root = Node(state=env.clone())
-        # Expand the root once before the simulation loop so that root noise
-        # mixes into a real prior, and selection has something to chew on.
         self._expand(root)
         if add_root_noise:
             self._add_root_noise(root, rng)
@@ -140,7 +183,66 @@ class MCTS:
         for _ in range(self.n_simulations):
             self._simulate(root)
 
-        return self._visit_distribution(root)
+        return root
+
+    def _extract_top_k_pvs(
+        self, root: Node, k: int = 3, max_depth: int = 5
+    ) -> list["PrincipalVariation"]:
+        """Top-K principal variations from a populated MCTS tree.
+
+        For each of the K most-visited root children, greedily walk the
+        most-visited descendant chain up to ``max_depth`` plies.
+        """
+        if not root.children:
+            return []
+
+        sorted_root_actions = sorted(
+            root.children.keys(),
+            key=lambda a: -root.children[a].visit_count,
+        )[:k]
+
+        pvs: list[PrincipalVariation] = []
+        for first_action in sorted_root_actions:
+            moves: list[tuple[int, int]] = []
+            node = root
+            action = first_action
+            for _depth in range(max_depth):
+                if action not in node.children:
+                    break
+                child = node.children[action]
+                mover = node.state.current_player()
+                if mover not in (0, 1):
+                    mover = 0
+                moves.append((int(action), int(mover)))
+                if child.is_terminal or not child.is_expanded or not child.children:
+                    node = child
+                    break
+                # Next: most-visited descendant
+                node = child
+                action = max(
+                    child.children.keys(),
+                    key=lambda a: child.children[a].visit_count,
+                )
+
+            # Compute value at PV's end, from root's perspective.
+            end_node = node
+            if end_node.is_terminal:
+                raw_value = end_node.terminal_value
+            else:
+                raw_value = end_node.Q
+            # Sign convention: end_node's value is from end_node's mover POV.
+            # Each move flips POV, so flip ((-1)^len(moves)).
+            sign = (-1) ** len(moves)
+            value_root_pov = float(raw_value * sign)
+
+            pvs.append(
+                PrincipalVariation(
+                    moves=moves,
+                    visit_count=int(root.children[first_action].visit_count),
+                    value=value_root_pov,
+                )
+            )
+        return pvs
 
     def select_action(
         self,
@@ -296,4 +398,10 @@ class MCTS:
         return dist
 
 
-__all__ = ["MCTS", "Node", "N_ACTIONS", "PASS_ACTION"]
+__all__ = [
+    "MCTS",
+    "Node",
+    "PrincipalVariation",
+    "N_ACTIONS",
+    "PASS_ACTION",
+]

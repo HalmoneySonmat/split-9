@@ -19,7 +19,13 @@ import torch
 from torch import nn
 
 from split_brain_go.env.go_env import GoEnv
-from split_brain_go.gonet.mcts import N_ACTIONS, PASS_ACTION, MCTS, Node
+from split_brain_go.gonet.mcts import (
+    MCTS,
+    N_ACTIONS,
+    PASS_ACTION,
+    Node,
+    PrincipalVariation,
+)
 from split_brain_go.gonet.network import GoNet, GoNetConfig
 
 
@@ -248,3 +254,66 @@ def test_strong_prior_concentrates_visits(empty_env):
     assert dist[40] > 0.5, (
         f"Expected concentration on action 40 (center); got dist[40]={dist[40]}"
     )
+
+
+# ============================================================ PV extraction
+
+
+def test_search_with_pvs_returns_correct_shape(random_net, empty_env):
+    mcts = MCTS(random_net, n_simulations=20, dirichlet_weight=0.0)
+    dist, pvs = mcts.search_with_pvs(
+        empty_env, k=3, max_depth=5, add_root_noise=False
+    )
+    assert dist.shape == (N_ACTIONS,)
+    assert isinstance(pvs, list)
+    assert len(pvs) <= 3
+    for pv in pvs:
+        assert isinstance(pv, PrincipalVariation)
+        assert len(pv.moves) <= 5
+        assert pv.visit_count >= 0
+
+
+def test_pv_first_move_is_top_visited(random_net, empty_env):
+    """The top-1 PV's first move should have the maximum visit fraction.
+
+    Note: with tied visit counts, ``np.argmax`` and our internal sort can
+    pick different indices (both valid). Compare *visit fractions* instead
+    of indices.
+    """
+    mcts = MCTS(random_net, n_simulations=30, dirichlet_weight=0.0)
+    dist, pvs = mcts.search_with_pvs(
+        empty_env, k=1, max_depth=3, add_root_noise=False
+    )
+    assert len(pvs) == 1
+    first_action = pvs[0].moves[0][0]
+    # The first PV move's distribution mass must equal the maximum
+    # — they're tied, but both refer to a "most-visited" action.
+    assert dist[first_action] == pytest.approx(dist.max(), abs=1e-9), (
+        f"PV first action {first_action} has dist[first]={dist[first_action]:.4f} "
+        f"but max={dist.max():.4f}"
+    )
+
+
+def test_pv_alternates_movers(random_net, empty_env):
+    """In a PV of length ≥ 2, mover should alternate between Black and White."""
+    mcts = MCTS(random_net, n_simulations=30, dirichlet_weight=0.0)
+    _, pvs = mcts.search_with_pvs(
+        empty_env, k=1, max_depth=4, add_root_noise=False
+    )
+    assert len(pvs) == 1
+    for i in range(1, len(pvs[0].moves)):
+        prev_mover = pvs[0].moves[i - 1][1]
+        curr_mover = pvs[0].moves[i][1]
+        assert prev_mover != curr_mover, (
+            f"PV mover failed to alternate at step {i}: "
+            f"{pvs[0].moves}"
+        )
+
+
+def test_search_with_pvs_value_finite(random_net, empty_env):
+    mcts = MCTS(random_net, n_simulations=15, dirichlet_weight=0.0)
+    _, pvs = mcts.search_with_pvs(
+        empty_env, k=2, max_depth=3, add_root_noise=False
+    )
+    for pv in pvs:
+        assert math.isfinite(pv.value)

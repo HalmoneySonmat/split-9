@@ -25,6 +25,7 @@ import torch
 import torch.nn.functional as F
 
 from ..env.go_env import BOARD_SIZE, PASS_ACTION, GoEnv
+from ..gonet.mcts import PrincipalVariation
 
 # Move-count thresholds for game phase labels (9x9 Go).
 PHASE_OPENING_END = 16
@@ -52,6 +53,9 @@ class GameSignal:
     captures: int = 0
     game_phase: str = "opening"  # "opening" | "middlegame" | "endgame"
     mover: int = 0  # 0 = Black, 1 = White
+    # MCTS principal variations — top-K lines explored, each up to ~5 plies.
+    # First PV is usually the chosen move's line.
+    principal_variations: list[PrincipalVariation] = field(default_factory=list)
 
 
 # ============================================================ extraction
@@ -90,6 +94,7 @@ def extract_signal(
     value: float,
     value_after: float | None = None,
     top_k: int = 3,
+    principal_variations: list[PrincipalVariation] | None = None,
 ) -> GameSignal:
     """Build a ``GameSignal`` from a single move's data.
 
@@ -154,6 +159,7 @@ def extract_signal(
         captures=captures,
         game_phase=_phase_label(len(env_before.history())),
         mover=int(mover) if mover in (0, 1) else 0,
+        principal_variations=list(principal_variations or []),
     )
 
 
@@ -186,17 +192,65 @@ def _format_value_delta(delta: float | None) -> str:
     return "the value barely moved"
 
 
-# Each template is a callable: GameSignal → str. We list a few so the
-# renderer can pick uniformly. More variety helps the adapter not memorise
-# a single phrasing.
+# ---------------------------- word-variation pools (E)
 
-def _tpl_neutral(s: GameSignal) -> str:
+
+_VERB_CHOSE = ("chose", "played", "selected", "placed at")
+_VERB_CONSIDER = ("Considered", "Evaluated", "Examined", "Explored")
+_VERB_IMAGINE = ("imagined", "envisioned", "pictured", "visualized")
+_NOUN_VALUE = ("value", "score", "evaluation", "outlook")
+_NOUN_ALTERNATIVE = ("alternatives", "candidates", "other lines", "variations")
+
+
+def _pick(rng: np.random.Generator, pool: tuple[str, ...]) -> str:
+    return pool[int(rng.integers(0, len(pool)))]
+
+
+# ---------------------------- PV formatting
+
+
+def _format_color_pos(action: int, mover: int) -> str:
+    """`B(4, 4)` style. Pass shows as `B(pass)`."""
+    pos = _action_to_pos(action)
+    color = "B" if mover == 0 else "W"
+    if pos is None:
+        return f"{color}(pass)"
+    return f"{color}({pos[0]}, {pos[1]})"
+
+
+def _format_pv_line(pv: PrincipalVariation) -> str:
+    """One PV: ``B(4, 4) W(2, 3) B(5, 6) → val +0.35``."""
+    if not pv.moves:
+        return f"(empty line) → val {pv.value:+.2f}"
+    seq = " ".join(_format_color_pos(a, m) for a, m in pv.moves)
+    return f"{seq} → val {pv.value:+.2f}"
+
+
+def _format_pvs_block(pvs: list[PrincipalVariation], max_lines: int = 3) -> str:
+    if not pvs:
+        return "(no MCTS lines available)"
+    selected = pvs[:max_lines]
+    return "\n".join(f"  {_format_pv_line(pv)}" for pv in selected)
+
+
+# ---------------------------- templates
+
+
+# Each template is a callable: (GameSignal, rng) → str. We list six so the
+# renderer picks uniformly — three "single-move" forms and three
+# "PV-based" forms that narrate MCTS exploration. Word-pool randomisation
+# inside each template avoids the LLM memorising a fixed surface form.
+
+def _tpl_neutral(s: GameSignal, rng: np.random.Generator) -> str:
     color = "Black" if s.mover == 0 else "White"
+    verb = _pick(rng, _VERB_CHOSE)
+    val_word = _pick(rng, _NOUN_VALUE)
+    alt_word = _pick(rng, _NOUN_ALTERNATIVE)
     parts = [
-        f"Move {s.move_number}: {color} chose {_format_pos(s.selected_pos)} "
+        f"Move {s.move_number}: {color} {verb} {_format_pos(s.selected_pos)} "
         f"with confidence {s.selected_confidence:.2f}.",
-        f"Top alternatives: {_format_alts(s.top_alternatives)}.",
-        f"Value before the move was {s.value_before:+.2f}; "
+        f"Top {alt_word}: {_format_alts(s.top_alternatives)}.",
+        f"{val_word.capitalize()} before the move was {s.value_before:+.2f}; "
         f"{_format_value_delta(s.value_delta)}.",
     ]
     if s.captures:
@@ -205,7 +259,7 @@ def _tpl_neutral(s: GameSignal) -> str:
     return " ".join(parts)
 
 
-def _tpl_concise(s: GameSignal) -> str:
+def _tpl_concise(s: GameSignal, rng: np.random.Generator) -> str:
     color = "B" if s.mover == 0 else "W"
     pos = _format_pos(s.selected_pos)
     cap = f", {s.captures} capture(s)" if s.captures else ""
@@ -216,8 +270,9 @@ def _tpl_concise(s: GameSignal) -> str:
     )
 
 
-def _tpl_narrative(s: GameSignal) -> str:
+def _tpl_narrative(s: GameSignal, rng: np.random.Generator) -> str:
     color = "Black" if s.mover == 0 else "White"
+    verb = _pick(rng, _VERB_CHOSE)
     intro_phrase = {
         "opening": "In the opening,",
         "middlegame": "In the middlegame,",
@@ -228,7 +283,7 @@ def _tpl_narrative(s: GameSignal) -> str:
         body = f"{color} passed."
     else:
         body = (
-            f"{color} played at {_format_pos(s.selected_pos)} "
+            f"{color} {verb} {_format_pos(s.selected_pos)} "
             f"(probability {s.selected_confidence:.2f})."
         )
 
@@ -268,16 +323,97 @@ def _tpl_narrative(s: GameSignal) -> str:
     return f"{intro_phrase} {body}{alts_text}{outcome}{captures_text}"
 
 
-_TEMPLATES = [_tpl_neutral, _tpl_concise, _tpl_narrative]
+# ----- PV-based templates (3) — narrate MCTS exploration -----------------
+
+
+def _tpl_pv_lines(s: GameSignal, rng: np.random.Generator) -> str:
+    """List top-3 PVs as lines, then state the choice.
+
+    Example:
+        Considered:
+          B(4, 4) W(2, 3) B(5, 6) W(7, 1) B(0, 0) → val +0.35
+          B(2, 3) W(4, 4) B(7, 7) → val +0.05
+          B(8, 8) W(1, 1) → val -0.15
+        Chose B(4, 4): highest expected outlook.
+    """
+    consider_word = _pick(rng, _VERB_CONSIDER)
+    val_word = _pick(rng, _NOUN_VALUE)
+    pos = _format_pos(s.selected_pos)
+    color = "B" if s.mover == 0 else "W"
+    chose_verb = _pick(rng, _VERB_CHOSE)
+    body = f"{consider_word}:\n{_format_pvs_block(s.principal_variations)}"
+    tail = (
+        f"\n{chose_verb.capitalize()} {color}{pos}: highest expected {val_word}."
+    )
+    return body + tail
+
+
+def _tpl_imagination(s: GameSignal, rng: np.random.Generator) -> str:
+    """Narrative: 'I imagined PV1; alternatives were worse.'"""
+    if not s.principal_variations:
+        return _tpl_neutral(s, rng)
+    color = "Black" if s.mover == 0 else "White"
+    verb_imagine = _pick(rng, _VERB_IMAGINE)
+    main = s.principal_variations[0]
+    main_seq = " then ".join(
+        _format_color_pos(a, m) for a, m in main.moves
+    ) or "no move"
+    parts = [
+        f"{color} {verb_imagine}: {main_seq} (val {main.value:+.2f})."
+    ]
+    if len(s.principal_variations) > 1:
+        alts = []
+        for pv in s.principal_variations[1:3]:
+            head = pv.moves[0] if pv.moves else None
+            if head is None:
+                continue
+            alts.append(
+                f"{_format_color_pos(*head)} (val {pv.value:+.2f})"
+            )
+        if alts:
+            parts.append(
+                f"Other lines starting with " + " or ".join(alts) + " were weaker."
+            )
+    parts.append(
+        f"Decision: {_format_color_pos(s.selected_action, s.mover)}."
+    )
+    return " ".join(parts)
+
+
+def _tpl_comparison(s: GameSignal, rng: np.random.Generator) -> str:
+    """Brief comparative summary by PV value."""
+    if not s.principal_variations:
+        return _tpl_concise(s, rng)
+    color = "B" if s.mover == 0 else "W"
+    pos = _format_pos(s.selected_pos)
+    rows = []
+    for pv in s.principal_variations[:3]:
+        head = pv.moves[0] if pv.moves else None
+        if head is None:
+            continue
+        rows.append(f"{_format_color_pos(*head)} val {pv.value:+.2f}")
+    rows_text = "; ".join(rows) if rows else "(no lines)"
+    chose = _pick(rng, _VERB_CHOSE)
+    return f"[{s.game_phase}/{s.move_number}] {rows_text}. {chose.capitalize()} {color}{pos}."
+
+
+_TEMPLATES = [
+    _tpl_neutral,
+    _tpl_concise,
+    _tpl_narrative,
+    _tpl_pv_lines,
+    _tpl_imagination,
+    _tpl_comparison,
+]
 
 
 def render_explanation(
     signal: GameSignal, rng: np.random.Generator | None = None
 ) -> str:
-    """Render a signal as one English sentence using a random template."""
+    """Render a signal using a randomly-chosen template + word variation."""
     rng = rng if rng is not None else np.random.default_rng()
-    tpl = _TEMPLATES[rng.integers(0, len(_TEMPLATES))]
-    return tpl(signal)
+    tpl = _TEMPLATES[int(rng.integers(0, len(_TEMPLATES)))]
+    return tpl(signal, rng)
 
 
 # ============================================================ convenience
@@ -290,11 +426,18 @@ def synthesize(
     policy_logits: torch.Tensor,
     value: float,
     value_after: float | None = None,
+    principal_variations: list[PrincipalVariation] | None = None,
     rng: np.random.Generator | None = None,
 ) -> tuple[GameSignal, str]:
     """One-shot: extract signal then render. Returns ``(signal, text)``."""
     signal = extract_signal(
-        env_before, action, env_after, policy_logits, value, value_after
+        env_before,
+        action,
+        env_after,
+        policy_logits,
+        value,
+        value_after,
+        principal_variations=principal_variations,
     )
     return signal, render_explanation(signal, rng=rng)
 
