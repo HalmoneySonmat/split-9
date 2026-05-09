@@ -95,7 +95,7 @@ Four probes, in order of cost and informativeness.
 | Random-init adapter (no checkpoint)    | 2.78 | 16.14 |
 | **Trained adapter**                    | **0.50** | **1.65** |
 
-![Baselines — Output-only / Random / Trained](runs/figures/fig1.png)
+![Baselines — Output-only / Random / Trained](docs/figures/fig1_baselines.png)
 
 The trained adapter beats Output-only by **−81.9% loss**. The
 trained-vs-random gap is the same because Flamingo gates are
@@ -116,7 +116,7 @@ tensors before they reach the adapter, and watch the loss change.
 | 0.75 | 0.556 | +10.6 % |
 | 1.00 | 0.607 | +20.6 % |
 
-![IAS sweep — loss vs channel mask ratio](runs/figures/fig2.png)
+![IAS sweep — loss vs channel mask ratio](docs/figures/fig2_ias_sweep.png)
 
 The curve is *convex* — half the channels can be zeroed with almost
 no penalty. That's the signature of a redundantly encoded signal,
@@ -135,7 +135,7 @@ than the explanation belongs to).
 | mismatched       | 0.594 |
 | **APC**          | **+0.181** |
 
-![APC — matched vs mismatched](runs/figures/fig3.png)
+![APC — matched vs mismatched](docs/figures/fig3_apc.png)
 
 3 seeds, σ ≈ 0.003 — extremely stable. The mismatched penalty is
 **5× larger than IAS@0.5**, because full board swapping bypasses the
@@ -164,7 +164,7 @@ TRAINED      : [middlegame/21] B (2, 1) (p=0.01, v=-0.99, Δv=+0.11) selected...
 OUTPUT-ONLY  : 1. The author's use of the word "suddenly"...
 ```
 
-![Mode collapse — output coordinate frequency](runs/figures/fig5.png)
+![Mode collapse — output coordinate frequency](docs/figures/fig5_mode_collapse.png)
 
 Three things jump out.
 
@@ -187,7 +187,7 @@ Three things jump out.
 
 ## Loss decomposition (the headline)
 
-![Loss decomposition — 95% prior + 5% per-board](runs/figures/fig4.png)
+![Loss decomposition — 95% prior + 5% per-board](docs/figures/fig4_loss_decomposition.png)
 
 Combining the three probes in raw loss units:
 

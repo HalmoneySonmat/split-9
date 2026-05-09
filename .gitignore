@@ -64,7 +64,3 @@ data/raw/
 data/processed/
 flamingo-pytorch/
 
-# CALLOSUM-9: track figures and small text reports for the README
-!runs/figures/
-!runs/figures/**
-!runs/*.txt

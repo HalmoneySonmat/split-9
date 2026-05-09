@@ -1,6 +1,6 @@
 """Render the README figures from measured data.
 
-Outputs PNGs to ``runs/figures/`` (creates if missing). All numbers
+Outputs PNGs to ``docs/figures/`` (creates if missing). All numbers
 are hard-coded from the measurement runs — re-run the probes and edit
 this file if data changes.
 
@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-OUT_DIR = Path("runs/figures")
+OUT_DIR = Path("docs/figures")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ----- styling
